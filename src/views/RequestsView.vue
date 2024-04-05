@@ -62,6 +62,23 @@
     <!-- Paso 2: Seleccionar firmantes -->
     <div v-if="currentStep === 2">
       <h2 class="text-2xl m-6">¿Quién firmará?</h2>
+
+      <!-- MENSAJE DE ERROR -->
+      <div v-if="signerError" class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center flex justify-between items-center w-96" style="width: 450px;">
+        <span class="ml-2 font-bold">{{ signerErrorMessage }}</span>
+        <button @click="signerError = false"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+      </div>
+
+      <!-- Campos para los firmantes -->
+      <div class="m-6">
+        <div v-for="(signer, index) in signers" :key="index" class="flex items-center">
+          <input type="text" v-model="signer.name" placeholder="Nombre del firmante" class="border-gray-600 border-b w-96 p-2 mr-4 mb-4">
+          <button @click="removeSigner(index)" v-show="signers.length > 1" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md"><i class="fas fa-trash"></i></button>
+        </div>
+        <button @click="addSigner" class="bg-blue-500 hover:bg-blue-600 text-gray-200 px-6 py-1 font-bold rounded-full">
+          <i class="fas fa-plus mr-2"></i>Agregar
+        </button>
+      </div>
     </div>
 
     <!-- Paso 3: Posicionar las firmas -->
@@ -101,7 +118,10 @@ export default {
       loading: false,
       fileNames: [],
       errorMessage: '',
-      documentSelected: false
+      documentSelected: false,
+      signers: [{ name: '' }],
+      signerError: false,
+      signerErrorMessage: 'Por favor, escribe el nombre de todos los firmantes.'
     };
   },
   methods: {
@@ -114,11 +134,30 @@ export default {
       }
     },
     nextStep() {
+      // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 1 && this.fileNames.length === 0) {
-        // Verificar si no se ha seleccionado ningún documento
         this.errorMessage = 'Seleccione al menos un documento.';
         return; // No avanzar al siguiente paso
       }
+      
+      // Verificar si hay algún nombre de firmante faltante solo si ya se han agregado firmantes
+      if (this.currentStep === 2 && this.signers.length > 0 && this.signers.some(signer => signer.name.trim() === '')) {
+        this.signerError = true;
+        return; // No avanzar al siguiente paso
+      }
+
+      // Reiniciar el mensaje de error de los firmantes si retrocede después de haber agregado un documento
+      if (this.currentStep === 1 && this.fileNames.length > 0) {
+        this.signerError = false;
+      }
+
+      // Limpiar el mensaje de error de los firmantes al avanzar al siguiente paso después de haber ingresado nombres de firmantes
+      if (this.currentStep === 2) {
+        this.signerError = false;
+      }
+
+      // Si pasa todas las validaciones, avanzar al siguiente paso
+      this.errorMessage = ''; // Limpiar el mensaje de error
       this.currentStep++; 
     },
     handleDrop(event) {
@@ -178,6 +217,18 @@ export default {
       const allowedExtensions = ['.pdf', '.docx'];
       const fileType = '.' + file.name.split('.').pop();
       return allowedExtensions.includes(fileType.toLowerCase());
+    },
+    addSigner() {
+      this.signers.push({ name: '' }); // Agregar un nuevo objeto de firmante con un campo de nombre vacío
+    },
+    removeSigner(index) {
+      // Verificar si hay más de un firmante antes de eliminar
+      if (this.signers.length > 1) {
+        this.signers.splice(index, 1); // Eliminar el firmante en la posición especificada
+      } else {
+        // Limpiar el nombre del primer firmante en lugar de eliminarlo
+        this.signers[index].name = '';
+      }
     }
   }
 }
