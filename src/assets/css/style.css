@@ -1,0 +1,15 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* EVITAR OVERFLOW */
+
+html, body {
+    overflow-x: hidden;
+}
+  
+/* FUENTES */
+  
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', 'Montserrat', 'Lato', sans-serif; 
+}
