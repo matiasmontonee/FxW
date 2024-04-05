@@ -40,7 +40,9 @@
         </a>
 
         <div class="flex items-center">
-          <button @click="openModal" class="hidden lg:flex bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl">Crear documento</button>
+          <router-link to="/requests">
+            <button class="hidden lg:flex bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl">Crear documento</button>
+          </router-link>
           <div class="relative ml-4">
             <div :class="{'bg-gray-200': showDropdown}" class="hidden lg:flex items-center hover:bg-gray-200 py-1 px-2 rounded-xl cursor-pointer" @click="toggleDropdown">
               <p v-if="user" class="mr-2">{{user.email}}</p>
@@ -60,7 +62,9 @@
         <div class="lg:hidden flex justify-between w-full">
           <button @click="toggleSidebar" class="block lg:hidden rounded"><i class="fas fa-bars text-2xl"></i></button>
           <div class="flex items-center">
-            <button @click="openModal" class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear documento</button>
+            <router-link to="/requests">
+              <button class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear documento</button>
+            </router-link>
             <div class="items-center py-1 px-2 rounded-xl cursor-pointer" @click="toggleDropdown">
               <i class="fas fa-user text-2xl"></i>
             </div>
@@ -73,26 +77,19 @@
             </div>
           </div>
         </div>
-
-        <ModalTypeComponent v-if="showModal" @close="closeModal" />
       </nav>
     </header>
 </template>
 
 <script>
 import { googleLogout } from 'vue3-google-login';
-import ModalTypeComponent from './ModalTypeComponent.vue';
 
 export default {
   props: ['user'],
-  components: {
-    ModalTypeComponent
-  },
   data() {
     return {
       showDropdown: false,
-      sidebarOpen: window.innerWidth >= 1024, 
-      showModal: false
+      sidebarOpen: window.innerWidth >= 1024
     };
   },
   methods: {
@@ -102,12 +99,6 @@ export default {
     },
     toggleSidebar() {
       this.sidebarOpen = !this.sidebarOpen;
-    },
-    openModal() {
-      this.showModal = true;
-    },
-    closeModal() {
-      this.showModal = false;
     },
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
