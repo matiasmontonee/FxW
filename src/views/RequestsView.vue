@@ -83,7 +83,24 @@
 
     <!-- Paso 3: Posicionar las firmas -->
     <div v-if="currentStep === 3">
-      <h2 class="text-2xl m-6">Posiciona las firmas</h2>
+      <h2 class="text-2xl m-6">Posiciona las firmas <span class="text-gray-400">(opcional)</span></h2>
+
+      <div class="m-6">
+        <h3 class="text-lg mb-2">¿Cómo funciona?</h3>
+
+        <p>1. <span class="font-semibold">Clickeá cualquier parte del documento</span> donde quieras agregar la firma.</p>
+        <p>2. <span class="font-semibold">Seleccioná el firmante</span> y el campo a posicionar.</p>
+      </div>
+
+      <div v-if="documentLoaded" class="m-6">
+        <!-- PDF -->
+        <div v-for="(documentUrl, index) in documentUrls" :key="index" class="mb-16">
+          <iframe :src="documentUrl" class="w-full h-96" frameborder="0"></iframe>
+        </div>
+        
+        <!-- DOCX -->
+        <!-- <embed :src="documentUrl" type="application/vnd.openxmlformats-officedocument.wordprocessingml.document" class="w-full h-96"></embed> -->
+      </div>
     </div>
 
     <!-- Paso 4: Enviar el documento -->
@@ -122,7 +139,9 @@ export default {
       documentSelected: false,
       signers: [{ name: '' }],
       signerError: false,
-      signerErrorMessage: 'Por favor, escribe el nombre de todos los firmantes.'
+      signerErrorMessage: 'Por favor, escribe el nombre de todos los firmantes.',
+      documentLoaded: false,
+      documentUrls: []
     };
   },
   methods: {
@@ -169,6 +188,9 @@ export default {
 
       for (let i = 0; i < files.length; i++) { // Simular la carga de cada archivo
         if (this.isValidFileType(files[i])) {
+          // Almacenar el documento cargado
+          this.documentUrl = URL.createObjectURL(files[i]);
+          this.documentLoaded = true;
           setTimeout(() => {
             this.fileNames.push(files[i].name); // Agregar el nombre del archivo al array fileNames
             if (i === files.length - 1) { // Ocultar la barra de carga después de cargar todos los archivos
@@ -191,13 +213,16 @@ export default {
 
       for (let i = 0; i < files.length; i++) {
         if (this.isValidFileType(files[i])) {
+          const fileUrl = URL.createObjectURL(files[i]); // Almacenar la URL del documento cargado
+          this.documentUrls.push(fileUrl); // Agregar la URL del documento al array documentUrls
+          this.documentLoaded = true;
           setTimeout(() => {
             this.fileNames.push(files[i].name);
             if (i === files.length - 1) {
               this.loading = false;
               this.documentSelected = true;
             }
-          }, 1000 * (i + 1));
+          }, 1000 * (i + 1)); // Tiempo de simulación de carga
         } else {
           this.errorMessage = 'Solo se permiten archivos PDF o DOCX.';
           this.loading = false;
