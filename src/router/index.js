@@ -11,7 +11,7 @@ import NotFound from '../views/NotFoundView.vue';
 const routes = [
   {
     path: '/',
-    component: Login
+    component: Requests,
   },
   {
     path: '/login',
@@ -20,32 +20,32 @@ const routes = [
   {
     path: '/requests',
     component: Requests,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/download',
     component: Download,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/dashboard',
     component: Dashboard,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/contact',
     component: Contact,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/settings',
     component: Settings,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/help',
     component: Help,
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/:catchAll(.*)', 
