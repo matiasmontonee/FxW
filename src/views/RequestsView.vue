@@ -108,6 +108,7 @@
 import NavbarComponent from '../components/NavbarComponent.vue';
 
 export default {
+  emits: ['login','logout'],
   props: ['user'],
   components: {
     NavbarComponent

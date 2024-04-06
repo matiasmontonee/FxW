@@ -50,7 +50,7 @@
             </div>
             <div v-show="showDropdown" class="hidden lg:block absolute lg:right-0 lg:mt-5 w-80 bg-white rounded-md shadow-2xl z-10">
                 <ul>
-                  <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture" alt="User Picture" class="rounded-full h-5 w-4.5 mr-2"><span v-if="user">{{ user.name.split(' ')[0] }}</span></li>
+                  <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture" alt="User" class="rounded-full h-5 w-4.5 mr-2"><span v-if="user">{{ user.name.split(' ')[0] }}</span></li>
                   <li><button class="hover:bg-gray-200 p-2 w-full text-left"><i class="fas fa-user-circle mr-2 text-xl"></i>Mi perfil</button></li>
                   <li><button @click="logout" class="hover:bg-gray-200 rounded-b-md p-2 w-full text-left"><i class="fas fa-sign-out-alt mr-2 text-xl"></i>Cerrar sesión</button></li>
                 </ul>
@@ -70,7 +70,7 @@
             </div>
             <div v-show="showDropdown" class="lg:hidden absolute right-5 mt-52 w-64 bg-white rounded-md shadow-2xl z-10">
                 <ul>
-                  <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture" alt="User Picture" class="rounded-full h-5 w-4.5 mr-2"><span v-if="user">{{ user.name.split(' ')[0] }}</span></li>
+                  <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture" alt="User" class="rounded-full h-5 w-4.5 mr-2"><span v-if="user">{{ user.name.split(' ')[0] }}</span></li>
                   <li><button class="hover:bg-gray-200 p-2 w-full text-left"><i class="fas fa-user-circle mr-2 text-xl"></i>Mi perfil</button></li>
                   <li><button @click="logout" class="hover:bg-gray-200 rounded-b-md p-2 w-full text-left"><i class="fas fa-sign-out-alt mr-2 text-xl"></i>Cerrar sesión</button></li>
                 </ul>
@@ -85,6 +85,7 @@
 import { googleLogout } from 'vue3-google-login';
 
 export default {
+  emits: ['logout'],
   props: ['user'],
   data() {
     return {
