@@ -32,14 +32,14 @@ export default {
     async handleLogin(userData) {
       this.user = userData;
       setCookie('user', JSON.stringify(userData.email), 7); // Save mail as cookie
-      // localStorage.setItem('user', JSON.stringify(userData)); // Almacenar el usuario en el almacenamiento local
+      localStorage.setItem('user', JSON.stringify(userData)); // Almacenar el usuario en el almacenamiento local
       await createUser(userData.email)
       this.$router.push('/requests');
     },
     handleLogout() {
       this.user = null;
       eraseCookie('user');
-      // localStorage.removeItem('user'); // Eliminar el usuario del almacenamiento local al cerrar sesión
+      localStorage.removeItem('user'); // Eliminar el usuario del almacenamiento local al cerrar sesión
       this.$router.push('/login');
     }
   }
