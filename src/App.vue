@@ -9,7 +9,7 @@
 import { setCookie, eraseCookie, getCookie} from './helpers/cookies';
 
 async function createUser(email) {
-  const response = await fetch(`http://localhost:3000/api/createUsrOnLogin/${email}`, {
+  const response = await fetch(`https://firmasxw.com/api/createUsrOnLogin/${email}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
