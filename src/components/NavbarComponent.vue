@@ -40,7 +40,7 @@
         </a>
 
         <div class="flex items-center">
-          <router-link to="/requests">
+          <router-link to="/newdocument">
             <button class="hidden lg:flex bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl">Crear documento</button>
           </router-link>
           <div class="relative ml-4">
@@ -62,7 +62,7 @@
         <div class="lg:hidden flex justify-between w-full">
           <button @click="toggleSidebar" class="block lg:hidden rounded"><i class="fas fa-bars text-2xl"></i></button>
           <div class="flex items-center">
-            <router-link to="/requests">
+            <router-link to="/newdocument">
               <button class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear documento</button>
             </router-link>
             <div class="items-center py-1 px-2 rounded-xl cursor-pointer" @click="toggleDropdown">
@@ -85,7 +85,6 @@
 import { googleLogout } from 'vue3-google-login';
 
 export default {
-  emits: ['logout'],
   props: ['user'],
   data() {
     return {
