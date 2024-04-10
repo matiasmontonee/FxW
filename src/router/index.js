@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/LoginView.vue';
 import Requests from '../views/RequestsView.vue';
+import CreateDocument from '../views/CreateDocumentView.vue';
 import Download from '../views/DownloadView.vue';
 import Dashboard from '../views/DashboardView.vue';
 import Contact from '../views/ContactView.vue';
@@ -11,7 +12,7 @@ import NotFound from '../views/NotFoundView.vue';
 const routes = [
   {
     path: '/',
-    component: Requests,
+    component: Login
   },
   {
     path: '/login',
@@ -20,32 +21,37 @@ const routes = [
   {
     path: '/requests',
     component: Requests,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/download',
     component: Download,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/dashboard',
     component: Dashboard,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/contact',
     component: Contact,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/settings',
     component: Settings,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
   },
   {
     path: '/help',
     component: Help,
-    // meta: { requiresAuth: true }
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/newdocument',
+    component: CreateDocument,
+    meta: { requiresAuth: true }
   },
   {
     path: '/:catchAll(.*)', 
