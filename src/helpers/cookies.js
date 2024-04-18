@@ -9,7 +9,7 @@ function setCookie(name,value,days) {
 }
 function getCookie(name) {
     let nameEQ = name + "=";
-    let ca = document.cookie;
+    let ca = document.cookie.split(';');
     for(const element of ca) {
         let c = element;
         while (c.startsWith(' ')) c = c.substring(1,c.length);
