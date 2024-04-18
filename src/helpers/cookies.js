@@ -1,4 +1,4 @@
-function setCookie(name,value,days) {
+// function setCookie(name,value,days) {
 //     let expires = "";
 //     if (days) {
 //         let date = new Date();
