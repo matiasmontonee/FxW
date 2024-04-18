@@ -1,59 +1,68 @@
 <template>
   <NavbarComponent :user="user" @logout="logout" />
 
-    <main class="flex flex-col flex-1 p-4 pt-0 lg:ml-72 mr-4 mt-6">
-      <div class="border border-gray-300 rounded mt-4 shadow-lg w-full overflow-x-auto">
+    <main class="flex flex-col flex-1 p-4 pt-0 lg:ml-56 bg-gray-100">
+      <div class="rounded-2xl w-full overflow-x-auto bg-white mr-4">
         <table class="w-full">
           <thead>
-            <tr>
-              <th class="px-4 py-2 text-left border-r border-gray-200">ID Solicitud 
-                <i class="fas fa-sort float-right mt-1 cursor-pointer"></i>
+            <tr class="border-b"> 
+              <th class="px-6 py-3 text-left text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
+                  <input class="text-gray-400 focus:outline-none" placeholder="Id Documento" /> 
+                </div>
               </th>
-              <th class="px-4 py-2 text-left border-r border-gray-200">Cliente
-                <i class="fas fa-sort float-right mt-1 cursor-pointer"></i>
+              <th class="px-6 py-3 text-left text-sm">
+                <p class="text-gray-400">Firmantes</p>
               </th>
-              <th class="px-4 py-2 text-left border-r border-gray-200">DNI
-                <i class="fas fa-sort float-right mt-1 cursor-pointer"></i>
+              <th class="px-6 py-3 text-left text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
+                  <input class="text-gray-400 focus:outline-none" placeholder="Fecha de Creación" />
+                </div>
               </th>
-              <th class="px-4 py-2 text-left border-r border-gray-200">Teléfono
-                <i class="fas fa-sort float-right mt-1 cursor-pointer"></i>
-              </th>
-              <th class="px-4 py-2 text-left border-r border-gray-200">Fecha de Solicitud
-                <i class="fas fa-sort float-right mt-1 cursor-pointer"></i>
-              </th>
-              <th class="px-4 py-2 text-left border-r border-gray-200">Estado
-                <i class="fas fa-sort float-right mt-1 cursor-pointer"></i>
+              <th class="px-6 py-3 text-left text-sm">
+                <div class="flex items-center">
+                  <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
+                  <input class="text-gray-400 focus:outline-none" placeholder="Estado" />
+                </div>
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index">
-              <td class="border p-4 text-sm">{{ solicitud.track_id }}</td>
-              <td class="border p-4 text-sm">
-                {{ solicitud.firmantes[0].name }} {{ solicitud.firmantes[0].last_name }}
+            <tr class="border-b" v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index">
+              <div class="pl-6 pr-12 py-2 items-center">
+                <td class="text-sm">{{ solicitud.track_id }}.pdf</td>
+                <i class="fas fa-chevron-down cursor-pointer text-blue-400"></i>
+              </div>
+              <td class="px-12 pb-6 text-sm"> 
+                <!-- {{ solicitud.firmantes[0].name }} {{ solicitud.firmantes[0].last_name }} -->
+                2/3
               </td>
-              <td class="border p-4 text-sm">
-                {{ solicitud.firmantes[0].dni }}
+              <td class="px-12 pb-6 text-sm">{{ solicitud.created_at }}</td>
+              <td class="px-12 pb-6 text-sm">
+                <div class="flex items-center">
+                  <span class="bg-green-400 text-white font-semibold px-3 py-0.5 rounded-xl mr-4 w-24 text-center"><!--{{ solicitud.status }}-->Firmado</span>
+                  <i class="far fa-file-pdf text-3xl text-blue-400"></i>
+                </div>
               </td>
-              <td class="border p-4 text-sm">
-                +{{ solicitud.firmantes[0].phone }}
-              </td>
-              <td class="border p-4 text-sm">{{ solicitud.created_at }}</td>
-              <td class="border p-4 text-sm"><span class="bg-orange-500 text-white font-semibold px-3 py-1 rounded-md">{{ solicitud.status }}</span></td>
             </tr>
             <tr v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index + '-2'">
-              <td class="border p-4 text-sm">{{ solicitud.track_id }}</td>
-              <td class="border p-4 text-sm">
-                {{ solicitud.firmantes[0].name }} {{ solicitud.firmantes[0].last_name }}
+              <div class="pl-6 pr-12 py-2 items-center">
+                <td class="text-sm">{{ solicitud.track_id }}.pdf</td>
+                <i class="fas fa-chevron-down cursor-pointer text-blue-400"></i>
+              </div>
+              <td class="px-12 py-2 text-sm">
+                <!-- {{ solicitud.firmantes[0].name }} {{ solicitud.firmantes[0].last_name }} -->
+                3/4
               </td>
-              <td class="border p-4 text-sm">
-                {{ solicitud.firmantes[0].dni }}
+              <td class="px-12 py-2 text-sm">{{ solicitud.created_at }}</td>
+              <td class="px-12 py-2 text-sm">
+                <div class="flex items-center">
+                  <span class="bg-red-400 text-white font-semibold px-3 py-0.5 rounded-xl mr-4 w-24 text-center"><!--{{ solicitud.status }}-->Rechazado</span>
+                  <i class="far fa-file-pdf text-3xl text-gray-400"></i>
+                </div>
               </td>
-              <td class="border p-4 text-sm">
-                +{{ solicitud.firmantes[0].phone }}
-              </td>
-              <td class="border p-4 text-sm">{{ solicitud.created_at }}</td>
-              <td class="border p-4 text-sm"><span class="bg-orange-500 text-white font-semibold px-3 py-1 rounded-md">{{ solicitud.status }}</span></td>
             </tr>
           </tbody>
         </table>
