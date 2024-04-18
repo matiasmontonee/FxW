@@ -2,48 +2,68 @@
     <div v-if="sidebarOpen" @click="toggleSidebar" class="lg:hidden fixed inset-0 bg-black opacity-50 z-10"></div>
 
     <!-- SIDEBAR -->
-    <aside v-if="sidebarOpen" class="bg-white pt-4 lg:mt-24 lg:ml-12 w-56 flex-shrink-0 absolute inset-y-0 left-0 transform transition-transform z-20" :class="{ '-translate-x-full': !sidebarOpen }">
-      <div class="flex flex-col h-full border-r border-gray-300">
-        <div class="flex items-center lg:hidden">
+    <aside v-if="sidebarOpen" class="bg-gray-800 text-gray-400 pt-4 h-full w-56 flex-shrink-0 absolute inset-y-0 left-0 transform transition-transform z-20" :class="{ '-translate-x-full': !sidebarOpen }" style="height: calc(127vh);">
+      <div class="flex flex-col h-full px-2">
+        <!-- <div class="flex items-center"> -->
           <a href="">
-            <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="h-14 pr- w-48 object-cover">
+            <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="mx-auto w-32 mt-4 mb-12">
           </a>
-          <i class="fas fa-times text-xl cursor-pointer" @click="toggleSidebar"></i>
+          <!-- <i class="fas fa-times text-xl cursor-pointer lg:hidden" @click="toggleSidebar"></i>
+        </div> -->
+        <div class="flex flex-col px-2 text-gray-100">
+          <button class="flex flex-col items-center font-semibold rounded-2xl bg-blue-400 mb-2 hover:bg-blue-300">
+            <span>Firmas</span>
+            <span class="text-xl">15/100</span>
+          </button>
+          <button class="rounded-2xl bg-green-400 mb-16 hover:bg-green-300">Comprar pack</button>
         </div>
-        <router-link to="/requests" :class="{'bg-blue-200': $route.path === '/requests', 'border-blue-500 rounded-l-xl border-r-4 text-blue-700 font-bold': $route.path === '/requests', 'hover:bg-blue-200 hover:rounded-xl': $route.path !== '/requests'}" class="mr-1 p-2 mb-2 ml-2 mt-4 lg:mt-0 break-all">
-          <i class="fas fa-tasks mr-2"></i> Solicitudes
+        <router-link to="/requests" :class="{'bg-blue-400': $route.path === '/requests', 'rounded-full text-white font-bold': $route.path === '/requests', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/requests'}" class="mr-1 p-2 mb-2 ml-2 mt-4 lg:mt-0 break-all">
+          <i class="fas fa-home mr-2 p-1" :class="{'text-blue-400 bg-white rounded-full': $route.path === '/requests'}"></i> Solicitudes
         </router-link>
-        <router-link to="/download" :class="{'bg-blue-200': $route.path === '/download', 'border-blue-500 rounded-l-xl border-r-4 text-blue-700 font-bold': $route.path === '/download', 'hover:bg-blue-200 hover:rounded-xl': $route.path !== '/download'}" class="mr-1 p-2 mb-2 ml-2 break-all">
-          <i class="fas fa-download mr-2"></i> Descargar reportes
+        <router-link to="/download" :class="{'bg-blue-400': $route.path === '/download', 'rounded-full text-white font-bold': $route.path === '/download', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/download'}" class="mr-1 p-2 mb-2 ml-2 break-all">
+          <i class="fas fa-chart-line mr-2 p-1" :class="{'text-blue-400 bg-white rounded-full': $route.path === '/download'}"></i> Informes
         </router-link>
-        <router-link to="/dashboard" :class="{'bg-blue-200': $route.path === '/dashboard', 'border-blue-500 rounded-l-xl border-r-4 text-blue-700 font-bold': $route.path === '/dashboard', 'hover:bg-blue-200 hover:rounded-xl': $route.path !== '/dashboard'}" class="mr-1 p-2 mb-2 ml-2 break-all">
-          <i class="fas fa-chart-bar mr-2"></i> Dashboard
+        <router-link to="/contact" :class="{'bg-blue-400': $route.path === '/contact', 'rounded-full text-white font-bold': $route.path === '/contact', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/contact'}" class="mr-1 p-2 mb-2 ml-2 break-all">
+          <i class="fas fa-user mr-2 p-1" :class="{'text-blue-400 bg-white rounded-full': $route.path === '/contact'}"></i> Contactos
         </router-link>
-        <router-link to="/contact" :class="{'bg-blue-200': $route.path === '/contact', 'border-blue-500 rounded-l-xl border-r-4 text-blue-700 font-bold': $route.path === '/contact', 'hover:bg-blue-200 hover:rounded-xl': $route.path !== '/contact'}" class="mr-1 p-2 mb-2 ml-2 break-all">
-          <i class="fas fa-user mr-2"></i> Contacto
+        <router-link to="/settings" :class="{'bg-blue-400': $route.path === '/settings', 'rounded-full text-white font-bold': $route.path === '/settings', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/settings'}" class="mr-1 p-2 mb-16 ml-2 break-all">
+          <i class="fas fa-cog mr-2 p-1" :class="{'text-blue-400 bg-white rounded-full': $route.path === '/settings'}"></i> Perfil
         </router-link>
-        <router-link to="/settings" :class="{'bg-blue-200': $route.path === '/settings', 'border-blue-500 rounded-l-xl border-r-4 text-blue-700 font-bold': $route.path === '/settings', 'hover:bg-blue-200 hover:rounded-xl': $route.path !== '/settings'}" class="mr-1 p-2 mb-2 ml-2 break-all">
-          <i class="fas fa-cog mr-2"></i> Ajustes
-        </router-link>
-        <router-link to="/help" class="pt-4 mx-4 border-t border-gray-300">
-          <button class="border border-blue-500 text-blue-500 hover:bg-blue-200 font-semibold rounded-lg w-full p-1">¿Necesitas ayuda?</button>
-        </router-link>
+        <button class="hover:text-gray-200 pt-20 mx-2 border-t border-gray-300 px-3 text-left mb-4">
+          <i class="fas fa-user-circle mr-5"></i> 
+          <span v-if="user">{{ user.name }}</span>
+        </button>
+        <button @click="logout" class="hover:text-gray-200 rounded-b-md px-5 text-left">
+          <i class="fas fa-sign-out-alt mr-4 text-xl"></i>
+          <span>Cerrar sesión</span>
+        </button>
       </div>
     </aside>
     
     <!-- NAVBAR -->
-    <header class="py-4 px-4 lg:px-12 border-b border-gray-300">
+    <header class="py-6 px-4 lg:px-12 bg-gray-100">
       <nav class="flex flex-row justify-between items-center">
         <!-- DESKTOP -->
-        <a href="">
+        <!-- <a href="">
           <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="hidden lg:flex h-10 w-32 object-cover">
-        </a>
+        </a> -->
+        <div class="flex items-center ml-52">
+          <i class="fas fa-bell mr-4 text-xl text-gray-500 relative"> <!-- Añadimos la clase relative -->
+            <span class="absolute h-2 w-2 bg-red-500 rounded-full top-0.5 right-0"></span> <!-- Punto rojo -->
+          </i>
+          <p class="text-blue-400 text-sm">Status: Activo</p>
+        </div>
 
         <div class="flex items-center">
           <router-link to="/newdocument">
-            <button class="hidden lg:flex bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl">Crear documento</button>
+            <button class="hidden lg:flex bg-blue-400 hover:bg-blue-500 text-white font-semibold py-0.5 px-4 rounded-full">
+              <div class="flex items-center">
+                <i class="fas fa-file-alt mr-2"></i>
+                <p class="mt-0.5">Crear documento</p>
+              </div>
+            </button>
           </router-link>
-          <div class="relative ml-4">
+          <!-- <div class="relative ml-4">
             <div :class="{'bg-gray-200': showDropdown}" class="hidden lg:flex items-center hover:bg-gray-200 py-1 px-2 rounded-xl cursor-pointer" @click="toggleDropdown">
               <p v-if="user" class="mr-2">{{user.email}}</p>
               <i class="fas fa-caret-down text-lg"></i>
@@ -55,7 +75,7 @@
                   <li><button @click="logout" class="hover:bg-gray-200 rounded-b-md p-2 w-full text-left"><i class="fas fa-sign-out-alt mr-2 text-xl"></i>Cerrar sesión</button></li>
                 </ul>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- TABLET Y MOBILE -->
