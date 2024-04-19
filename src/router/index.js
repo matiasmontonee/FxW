@@ -2,11 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/LoginView.vue';
 import Requests from '../views/RequestsView.vue';
 import CreateDocument from '../views/CreateDocumentView.vue';
-import Download from '../views/DownloadView.vue';
-import Dashboard from '../views/DashboardView.vue';
-import Contact from '../views/ContactView.vue';
-import Settings from '../views/SettingsView.vue';
-import Help from '../views/HelpView.vue';
+import Reports from '../views/ReportsView.vue';
+import Contacts from '../views/ContactsView.vue';
+import Profile from '../views/ProfileView.vue';
 import NotFound from '../views/NotFoundView.vue'; 
 
 const routes = [
@@ -24,33 +22,23 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/download',
-    component: Download,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/dashboard',
-    component: Dashboard,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/contact',
-    component: Contact,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/settings',
-    component: Settings,
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/help',
-    component: Help,
-    meta: { requiresAuth: true }
-  },
-  {
     path: '/newdocument',
     component: CreateDocument,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/reports',
+    component: Reports,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/contacts',
+    component: Contacts,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: '/profile',
+    component: Profile,
     meta: { requiresAuth: true }
   },
   {
