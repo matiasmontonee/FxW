@@ -8,11 +8,11 @@
           <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="mx-auto w-32 mt-4 mb-12">
         </a>
         <div class="flex flex-col px-2 text-gray-100">
-          <button class="flex flex-col items-center font-semibold rounded-2xl bg-blue-400 mb-2 hover:bg-blue-300">
+          <span class="flex flex-col items-center font-semibold rounded-2xl bg-blue-400 mb-2">
             <span>Firmas</span>
             <span class="text-xl">15/100</span>
-          </button>
-          <button class="rounded-2xl bg-green-400 mb-16 hover:bg-green-300">Comprar pack</button>
+          </span>
+          <router-link to="/purchase" class="rounded-2xl bg-green-400 mb-14 hover:bg-green-300 text-center">Comprar pack</router-link>
         </div>
         <router-link to="/requests" :class="{'bg-blue-400': $route.path === '/requests', 'rounded-full text-white font-bold': $route.path === '/requests', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/requests'}" class="mr-1 p-2 mb-2 ml-2 mt-4 lg:mt-0 break-all">
           <i class="fas fa-home mr-2 p-1" :class="{'text-blue-400 bg-white rounded-full': $route.path === '/requests'}"></i> Solicitudes
