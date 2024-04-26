@@ -24,14 +24,19 @@
               <div class="relative">
                 <label class="inline-flex items-center">
                   <input type="checkbox" class="hidden" v-model="documentSigned" />
-                  <div class="w-10 h-4 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-700': documentSigned }"></div>
-                  <div class="absolute w-6 h-6 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': documentSigned }"></div>
+                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': documentSigned }"></div>
+                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': documentSigned }"></div>
                 </label>
               </div>
             </div>
-            <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">
-              Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>
-            </button>
+            <div class="flex items-center">
+              <button class="text-gray-500 hover:text-gray-400 font-bold mr-6">
+                <i class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver
+              </button>
+              <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">
+                Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>
+              </button>
+            </div>
           </div>
 
           <!-- MENSAJE DE ERROR -->
@@ -96,30 +101,69 @@
           </div>
 
           <ul class="ml-6">
-            <li class="mb-2 text-gray-500 flex items-center">
-              Posicionar automáticamente
-              <i class="fas fa-info-circle ml-5"></i>
+            <li class="mb-2 text-gray-500 flex items-center justify-between w-72">
+              <span>Posicionar automáticamente</span>
+              <div class="flex items-center">
+                <div class="relative mr-4">
+                  <label class="inline-flex items-center mt-1">
+                    <input type="checkbox" class="hidden" v-model="automaticPositionChecked" />
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': automaticPositionChecked }"></div>
+                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': automaticPositionChecked }"></div>
+                  </label>
+                </div>
+                <i class="fas fa-info-circle text-xl mt-1"></i>
+              </div>
             </li>
-            <li class="mb-2 text-gray-500 flex items-center">
-              Pedir foto de dni / ci
-              <i class="fas fa-info-circle ml-20"></i>
+            <li class="mb-2 text-gray-500 flex items-center justify-between w-72">
+              <span>Pedir foto de dni / ci</span>
+              <div class="flex items-center">
+                <div class="relative mr-4">
+                  <label class="inline-flex items-center mt-1">
+                    <input type="checkbox" class="hidden" v-model="photoIdChecked" />
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': photoIdChecked }"></div>
+                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': photoIdChecked }"></div>
+                  </label>
+                </div>
+                <i class="fas fa-info-circle text-xl mt-1"></i>
+              </div>
             </li>
-            <li class="mb-2 text-gray-500 flex items-center">
-              Pedir selfie
-              <i class="fas fa-info-circle ml-36"></i>
+            <li class="mb-2 text-gray-500 flex items-center justify-between w-72">
+              <span>Pedir selfie</span>
+              <div class="flex items-center">
+                <div class="relative mr-4">
+                  <label class="inline-flex items-center mt-1">
+                    <input type="checkbox" class="hidden" v-model="selfieChecked" />
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': selfieChecked }"></div>
+                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': selfieChecked }"></div>
+                  </label>
+                </div>
+                <i class="fas fa-info-circle text-xl mt-1"></i>
+              </div>
             </li>
-            <li class="mb-12 text-gray-500 flex items-center">
-              Firmar todas las hojas
-              <i class="fas fa-info-circle ml-16"></i>
+            <li class="mb-12 text-gray-500 flex items-center justify-between w-72">
+              <span>Firmar todas las hojas</span>
+              <div class="flex items-center">
+                <div class="relative mr-4">
+                  <label class="inline-flex items-center mt-1">
+                    <input type="checkbox" class="hidden" v-model="signAllChecked" />
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': signAllChecked }"></div>
+                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': signAllChecked }"></div>
+                  </label>
+                </div>
+                <i class="fas fa-info-circle text-xl mt-1"></i>
+              </div>
             </li>
           </ul>
 
           <!-- DIV CONTENEDOR DE ARCHIVOS -->
           <div class="m-6" @dragover.prevent @drop.prevent="handleDrop">
-            <label for="fileInput" class="w-96 h-48 flex flex-col items-center text-center px-4 py-6 bg-blue-100 hover:bg-blue-200 rounded-lg shadow-lg cursor-pointer">
-              <i class="fas fa-file-pdf fa-3x mt-2 mb-6"></i>
-              <span>Suelta el archivo <span class="font-bold">PDF, DOCX o JPG/PNG</span> aquí o <span class="text-blue-500 font-bold">haz click</span> para buscar en tus documentos.</span>
-              <input id="fileInput" type='file' accept=".pdf, .docx, .png, .jpg" class="hidden" @change="handleFileChange" multiple />
+            <label for="fileInput" style="width: 550px;" class="w-96 h-60 mx-auto flex flex-col items-center text-center px-4 py-6 hover:bg-blue-100 cursor-pointer border-4 border-blue-400 border-dashed">
+              <i class="far fa-file text-gray-400 fa-4x mb-4"></i>
+              <p class="text-gray-400 px-32">Arrastrar y soltar el documento aquí o:</p>
+              <button @click="openFileInput" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full mt-2">
+                <i class="fas fa-search-plus mr-2"></i>Seleccionar archivo
+              </button>
+              <input id="fileInput" type='file' accept=".pdf, .docx, .png, .jpg, .jpeg" class="hidden" @change="handleFileChange" multiple />
             </label>
           </div>
 
@@ -146,7 +190,18 @@
 
         <!-- Paso 3: Enviar -->
         <div v-if="currentStep === 3">
-          <h2 class="text-2xl m-6">Enviar documento</h2>
+          <div class="flex items-center justify-between m-6 mt-4">
+            <div class="flex items-center text-lg">
+            </div>
+            <div class="flex items-center">
+              <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6">
+                <i class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver
+              </button>
+              <button class="text-gray-500 hover:text-gray-400 font-bold">
+                Continuar<i class="fas fa-arrow-right ml-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -171,12 +226,19 @@ export default {
       signers: [{ name: '', lastName: '', dni: '', areaCode: '', phoneNumber: '', contact: 'wpp' }],
       signerError: false,
       signerErrorMessage: 'Por favor, completa todos los datos de los firmantes.',
-      documentSigned: false
+      documentSigned: false,
+      automaticPositionChecked: false,
+      photoIdChecked: false,
+      selfieChecked: false,
+      signAllChecked: false
     };
   },
   methods: {
     logout() {
       this.$emit('logout');
+    },
+    openFileInput() {
+      document.getElementById('fileInput').click(); // Da opción de subir archivos mediante el botón
     },
     previousStep() {
       if (this.currentStep > 1) {
@@ -228,7 +290,7 @@ export default {
             }
           }, 1000 * (i + 1)); // Tiempo de simulación de carga
         } else {
-          this.errorMessage = 'Solo se permiten archivos PDF o DOCX.';
+          this.errorMessage = 'Solo archivos PDF, DOCX, JPG o PNG.';
           this.loading = false; // Detener la barra de carga
           break; // Salir del bucle si se encuentra un archivo no permitido
         }
@@ -250,7 +312,7 @@ export default {
             }
           }, 1000 * (i + 1)); // Tiempo de simulación de carga
         } else {
-          this.errorMessage = 'Solo se permiten archivos PDF, DOCX o JPG/PNG.';
+          this.errorMessage = 'Solo archivos PDF, DOCX, JPG o PNG.';
           this.loading = false;
           break;
         }
@@ -266,7 +328,7 @@ export default {
       this.errorMessage = ''; 
     },
     isValidFileType(file) {
-      const allowedExtensions = ['.pdf', '.docx', '.jpg', '.png'];
+      const allowedExtensions = ['.pdf', '.docx', '.jpg', '.jpeg', '.png'];
       const fileType = '.' + file.name.split('.').pop();
       return allowedExtensions.includes(fileType.toLowerCase());
     },
