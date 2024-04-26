@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../views/LoginView.vue';
+import Purchase from '../views/PurchaseView.vue';
 import Requests from '../views/RequestsView.vue';
 import CreateDocument from '../views/CreateDocumentView.vue';
 import Reports from '../views/ReportsView.vue';
@@ -15,6 +16,11 @@ const routes = [
   {
     path: '/login',
     component: Login
+  },
+  {
+    path: '/purchase',
+    component: Purchase,
+    meta: { requiresAuth: true }
   },
   {
     path: '/requests',
