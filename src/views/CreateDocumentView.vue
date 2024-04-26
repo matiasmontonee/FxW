@@ -19,7 +19,9 @@
         <!-- Paso 1: Cargar firmantes -->
         <div v-if="currentStep === 1">
           <div class="flex items-center justify-between m-6 mt-4">
-            <div class="flex items-center">
+            <!-- TODO: si marca que va a firmar el documento... vamos a agarrar la info de perfil y completar los campos automáticamente... 
+              se tiene que validar que existan... por ahora lo dejamos off-->
+            <!-- <div class="flex items-center">
               <p class="text-gray-400 mr-4">Voy a firmar este documento</p>
               <div class="relative">
                 <label class="inline-flex items-center">
@@ -28,7 +30,7 @@
                   <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': documentSigned }"></div>
                 </label>
               </div>
-            </div>
+            </div> -->
             <div class="flex items-center">
               <button class="text-gray-500 hover:text-gray-400 font-bold mr-6">
                 <i class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver
@@ -62,7 +64,14 @@
                 <input v-if="signer.contact === 'mail'" type="email" v-model="signer.email" placeholder= 'Email' class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 placeholder-gray-800" style="margin-right: 104px">
                 <!-- Mostrar los campos de área y teléfono solo si la opción seleccionada es 'wpp' -->
                 <template v-else>
-                  <input type="number" v-model="signer.areaCode" placeholder="Área" class="border-gray-300 border-b-2 w-20 focus:outline-none p-2 pl-0 mr-6 placeholder-gray-800">
+                  <select v-model="signer.areaCode" placeholder="Área" class="border-gray-300 border-b-2 w-35 focus:outline-none p-2 pl-0 mr-6 placeholder-gray-800">
+                    <option value="549" selected>🇦🇷 +549</option>
+                    <option value="111">🇪🇸 +111</option>
+                    <option value="222">🇨🇱 +222</option>
+                    <option value="333">🇷🇺 +333</option>
+                    <option value="444">🇨🇷 +444</option>
+                    <option value="555">🇧🇷 +555</option>
+                  </select>
                   <input type="number" v-model="signer.phoneNumber" placeholder="Teléfono" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 placeholder-gray-800">
                 </template>
                 <div v-show="signers.length > 1" class="flex flex-col">
