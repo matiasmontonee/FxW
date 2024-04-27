@@ -7,7 +7,7 @@
 html, body {
     overflow-x: hidden;
 }
-  
+
 /* FUENTES */
   
 h1, h2, h3, h4, h5, h6 {
@@ -16,4 +16,11 @@ h1, h2, h3, h4, h5, h6 {
 
 p, span, button, ul {
     font-family: Arial, Helvetica, sans-serif;
+}
+
+/* INPUTS  */
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
 }
