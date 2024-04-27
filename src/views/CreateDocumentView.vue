@@ -18,7 +18,7 @@
 
         <!-- Paso 1: Cargar firmantes -->
         <div v-if="currentStep === 1">
-          <div class="flex items-center justify-between m-6 mt-4">
+          <div class="flex items-center justify-end m-6 mt-4">
             <!-- TODO: si marca que va a firmar el documento... vamos a agarrar la info de perfil y completar los campos automáticamente... 
               se tiene que validar que existan... por ahora lo dejamos off-->
             <!-- <div class="flex items-center">
@@ -31,14 +31,12 @@
                 </label>
               </div>
             </div> -->
-            <div class="flex items-center">
-              <button class="text-gray-500 hover:text-gray-400 font-bold mr-6">
-                <i class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver
-              </button>
-              <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">
-                Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>
-              </button>
-            </div>
+            <button class="text-gray-500 hover:text-gray-400 font-bold mr-6">
+              <i class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver
+            </button>
+            <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">
+              Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>
+            </button>
           </div>
 
           <!-- MENSAJE DE ERROR -->
@@ -48,7 +46,7 @@
           </div>
 
           <!-- Campos para los firmantes -->
-          <div class="m-6 mt-8">
+          <div class="m-6">
             <div v-for="(signer, index) in signers" :key="index" class="mb-12">
               <div class="flex items-center">
                 <input type="text" v-model="signer.name" :placeholder="index === 0 ? 'Nombre firmante' : 'Nombre firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
@@ -86,6 +84,13 @@
                 </div>
               </div>
             </div>
+
+            <!-- MENSAJE DE ERROR -->
+            <div v-if="maxSignersError" class="mb-12 text-red-500 bg-red-100 p-2 rounded-md text-center flex justify-between items-center" style="width: 460px;">
+              <span class="ml-2 font-bold">{{ maxSignersErrorMessage }}</span>
+              <button @click="maxSignersError = false"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+            </div>
+
             <button @click="addSigner" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
               <i class="fas fa-search-plus mr-2"></i>Agregar firmante
             </button>
@@ -94,7 +99,7 @@
 
         <!-- Paso 2: Cargar documento -->
         <div v-if="currentStep === 2">
-          <div class="flex items-center justify-between m-6 mt-4">
+          <div class="flex items-center justify-between m-6" style="marginTop: 14px">
             <div class="flex items-center text-lg">
               <input type="text" class="border-b border-gray-300 mr-4 placeholder-black focus:outline-none w-64" placeholder="Id / Nombre del documento">
               <i class="fas fa-edit text-gray-400"></i>
@@ -110,7 +115,7 @@
           </div>
 
           <ul class="ml-6">
-            <li class="mb-2 text-gray-500 flex items-center justify-between w-72">
+            <li class="mb-2 text-gray-500 flex items-center justify-between w-80">
               <span>Posicionar automáticamente</span>
               <div class="flex items-center">
                 <div class="relative mr-4">
@@ -123,8 +128,8 @@
                 <i class="fas fa-info-circle text-xl mt-1"></i>
               </div>
             </li>
-            <li class="mb-2 text-gray-500 flex items-center justify-between w-72">
-              <span>Pedir foto de dni / ci</span>
+            <li class="mb-2 text-gray-500 flex items-center justify-between w-80">
+              <span>Pedir foto de DNI/CI + foto Selfie</span>
               <div class="flex items-center">
                 <div class="relative mr-4">
                   <label class="inline-flex items-center mt-1">
@@ -136,21 +141,8 @@
                 <i class="fas fa-info-circle text-xl mt-1"></i>
               </div>
             </li>
-            <li class="mb-2 text-gray-500 flex items-center justify-between w-72">
-              <span>Pedir selfie</span>
-              <div class="flex items-center">
-                <div class="relative mr-4">
-                  <label class="inline-flex items-center mt-1">
-                    <input type="checkbox" class="hidden" v-model="selfieChecked" />
-                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': selfieChecked }"></div>
-                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': selfieChecked }"></div>
-                  </label>
-                </div>
-                <i class="fas fa-info-circle text-xl mt-1"></i>
-              </div>
-            </li>
-            <li class="mb-12 text-gray-500 flex items-center justify-between w-72">
-              <span>Firmar todas las hojas</span>
+            <li class="mb-12 text-gray-500 flex items-center justify-between w-80">
+              <span>Firmar en todas las hojas</span>
               <div class="flex items-center">
                 <div class="relative mr-4">
                   <label class="inline-flex items-center mt-1">
@@ -199,15 +191,55 @@
 
         <!-- Paso 3: Enviar -->
         <div v-if="currentStep === 3">
-          <div class="flex items-center justify-between m-6 mt-4">
-            <div class="flex items-center text-lg">
+          <div class="flex items-center justify-end m-6 mt-4">
+            <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6">
+              <i class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver
+            </button>
+            <button class="text-gray-500 hover:text-gray-400 font-bold">
+              Continuar<i class="fas fa-arrow-right ml-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>
+            </button>
+          </div>
+
+          <div class="m-6">
+              <div class="flex items-center">
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">Claudia</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">Alves</p>
+                <p class="border-gray-300 border-b-2 w-16 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">+549</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">1154982376</p>
+              </div>
+              <div class="flex items-center mb-8">
+                <a href="https://sign.rocketpin.com/store_token?tkn=7049" target="_blank" class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">https://sign.rocketpin.com/store_token?tkn=7049
+                  <span class="ml-10">
+                    <i v-if="!copiedLinks.includes('https://sign.rocketpin.com/store_token?tkn=7049')" @click.prevent="copyLink('https://sign.rocketpin.com/store_token?tkn=7049')" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                    <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
+                  </span>
+                </a>
+                <div class="flex items-center">
+                  <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
+                  <p>Enviar automáticamente</p>
+                  <i class="fas fa-info-circle text-xl ml-2 text-gray-500"></i>
+                </div>
+              </div>
+              <div class="flex items-center">
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">Claudia</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-28">Alves</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">claudia@gmail.com</p>
+              </div>
+              <div class="flex items-center mb-12">
+                <a href="https://sign.rocketpin.com/store_token?tkn=7049" target="_blank" class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">https://sign.rocketpin.com/store_token?tkn=7049
+                  <span class="ml-10">
+                    <i v-if="!copiedLinks.includes('https://sign.rocketpin.com/store_token?tkn=7049')" @click.prevent="copyLink('https://sign.rocketpin.com/store_token?tkn=7049')" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                    <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
+                  </span>
+                </a>
+                <div class="flex items-center">
+                  <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
+                  <p>Enviar automáticamente</p>
+                </div>
             </div>
-            <div class="flex items-center">
-              <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6">
-                <i class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver
-              </button>
-              <button class="text-gray-500 hover:text-gray-400 font-bold">
-                Continuar<i class="fas fa-arrow-right ml-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>
+            <div class="flex justify-center">
+              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
+                <i class="fas fa-file mr-2"></i>Enviar documento
               </button>
             </div>
           </div>
@@ -227,7 +259,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 1,
+      currentStep: 3,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -235,11 +267,14 @@ export default {
       signers: [{ name: '', lastName: '', dni: '', areaCode: '', phoneNumber: '', contact: 'wpp' }],
       signerError: false,
       signerErrorMessage: 'Por favor, completa todos los datos de los firmantes.',
+      maxSignersError: false,
+      maxSignersErrorMessage: 'Se ha alcanzado el límite máximo de firmantes (6).',
       documentSigned: false,
       automaticPositionChecked: false,
       photoIdChecked: false,
       selfieChecked: false,
-      signAllChecked: false
+      signAllChecked: false,
+      copiedLinks: []
     };
   },
   methods: {
@@ -247,7 +282,7 @@ export default {
       this.$emit('logout');
     },
     openFileInput() {
-      document.getElementById('fileInput').click(); // Da opción de subir archivos mediante el botón
+      document.getElementById('fileInput').click(); // Subir archivos mediante el botón
     },
     previousStep() {
       if (this.currentStep > 1) {
@@ -285,46 +320,27 @@ export default {
     },
     handleDrop(event) {
       const files = event.dataTransfer.files;
-      this.loading = true; // Mostrar la barra de carga
-      this.errorMessage = ''; // Reiniciar el mensaje de error
-      this.documentSelected = false; // Reiniciar la variable documentSelected
-
-      for (let i = 0; i < files.length; i++) { // Simular la carga de cada archivo
-        if (this.isValidFileType(files[i])) {
-          setTimeout(() => {
-            this.fileNames.push(files[i].name); // Agregar el nombre del archivo al array fileNames
-            if (i === files.length - 1) { // Ocultar la barra de carga después de cargar todos los archivos
-              this.loading = false;
-              this.documentSelected = true; // Indicar que se seleccionó al menos un documento
-            }
-          }, 1000 * (i + 1)); // Tiempo de simulación de carga
-        } else {
-          this.errorMessage = 'Solo archivos PDF, DOCX, JPG o PNG.';
-          this.loading = false; // Detener la barra de carga
-          break; // Salir del bucle si se encuentra un archivo no permitido
-        }
-      }
+      const file = files[0]; // Obtener el primer archivo arrastrado
+      this.handleFile(file);
     },
     handleFileChange(event) {
-      const files = event.target.files;
+      const file = event.target.files[0]; // Obtener el primer archivo del evento
+      this.handleFile(file);
+    },
+    handleFile(file) {
       this.loading = true;
       this.errorMessage = '';
       this.documentSelected = false;
 
-      for (let i = 0; i < files.length; i++) {
-        if (this.isValidFileType(files[i])) {
-          setTimeout(() => {
-            this.fileNames.push(files[i].name);
-            if (i === files.length - 1) {
-              this.loading = false;
-              this.documentSelected = true;
-            }
-          }, 1000 * (i + 1)); // Tiempo de simulación de carga
-        } else {
-          this.errorMessage = 'Solo archivos PDF, DOCX, JPG o PNG.';
+      if (this.isValidFileType(file)) {
+        setTimeout(() => {
+          this.fileNames = [file.name]; // Reemplazar los nombres de archivo con el nuevo archivo
           this.loading = false;
-          break;
-        }
+          this.documentSelected = true;
+        }, 1000); // Tiempo de simulación de carga
+      } else {
+        this.errorMessage = 'Solo archivos PDF, DOCX, JPG o PNG.';
+        this.loading = false;
       }
     },
     removeFile(index) {
@@ -342,7 +358,11 @@ export default {
       return allowedExtensions.includes(fileType.toLowerCase());
     },
     addSigner() {
-      this.signers.push({ name: '', lastName: '', dni: '', areaCode: '', phoneNumber: '', contact: 'wpp' }); // Agregar un nuevo objeto de firmante con campos vacíos
+      if (this.signers.length < 6) {
+        this.signers.push({ name: '', lastName: '', dni: '', areaCode: '', phoneNumber: '', contact: 'wpp' }); // Agregar un nuevo objeto de firmante con campos vacíos
+      } else {
+        this.maxSignersError = true; // Mostrar el mensaje de error
+      }
     },
     removeSigner(index) {
       // Verificar si hay más de un firmante antes de eliminar
@@ -357,7 +377,23 @@ export default {
         this.signers[index].phoneNumber = '';
         this.signers[index].contact = '';
       }
-    }
+    },
+    copyLink(link) { // Método para copiar el link
+      const el = document.createElement('textarea');
+      el.value = link;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      this.copiedLinks.push(link);
+
+      setTimeout(() => { // Eliminar el enlace copiado después de dos segundos
+        const index = this.copiedLinks.indexOf(link);
+        if (index !== -1) {
+          this.copiedLinks.splice(index, 1);
+        }
+      }, 2000);
+    },
   }
 }
 </script>
