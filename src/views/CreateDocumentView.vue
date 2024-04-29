@@ -54,7 +54,7 @@
                 <input type="number" v-model="signer.dni" :placeholder="index === 0 ? 'DNI / CI firmante' : 'DNI / CI firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
               </div>
               <div class="flex items-center">
-                <select v-model="signer.contact" class="p-2 mr-10 w-36 border border-gray-300">
+                <select v-model="signer.contact" class="p-2 mr-10 w-36 rounded border border-gray-300">
                   <option value="wpp" selected>WhatsApp</option>
                   <option value="mail">Mail</option>
                 </select>
