@@ -1,43 +1,103 @@
 <template>
-    <NavbarComponent :user="user" @logout="logout" />
+  <NavbarComponent :user="user" @logout="logout" />
 
-    <!-- DESCARGAR REPORTES -->
-      <main>
-        <h2 class="text-center mt-4">Informes</h2>
-        <!-- <div class="mx-auto mt-8 p-4 shadow-2xl border rounded-md w-3/4">
-          <div class="flex flex-col relative">
-            <div for="fecha" class="mb-1 text-gray-700">Estado</div>
-            <select class="border border-gray-500 px-2 py-1 rounded appearance-none w-full mb-4">
-              <option value="option01">Todos</option>
-              <option value="option02">Solicitada</option>
-              <option value="option03">En proceso</option>
-              <option value="option04">En revisión</option>
-              <option value="option05">Aprobada</option>
-              <option value="option06">Cotizando</option>
-              <option value="option07">Cotización lista</option>
-              <option value="option08">Cotización rechazada</option>
-              <option value="option09">Cotización aceptada</option>
-              <option value="option10">Firmado</option>
-              <option value="option11">No firmado</option>
-              <option value="option12">Rechazado</option>
-            </select>
-            <div class="absolute inset-y-0 right-2 bottom-52 flex items-center pointer-events-none">
-              <svg class="w-6 h-6 fill-current text-gray-700" viewBox="0 0 20 14" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 12L5 7h10l-5 5z" />
-              </svg>
-            </div>
-          
-            <div class="flex flex-col justify-between w-full mb-6">
-              <label for="fecha" class="mb-1 text-gray-700">Fecha inicio</label>
-              <input type="date" class="border border-gray-500 px-2 py-1 rounded w-full mb-4">
-              <label for="fecha" class="mb-1 text-gray-700">Fecha término</label>
-              <input type="date" class="border border-gray-500 px-2 py-1 rounded w-full">
-            </div>
+  <main class="flex p-4 pt-0 lg:ml-56 bg-gray-100">
+    <div class="rounded-2xl w-full overflow-x-auto bg-white">
+      <select class="m-6 mt-4 p-2 w-38 rounded border border-gray-300">
+        <option value="30" selected>Últimos 30 días</option>
+        <option value="15">Últimos 15 días</option>
+        <option value="7">Últimos 7 días</option>
+        <option value="hoy">Hoy</option>
+      </select>
 
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full mb-2">Descargar</button>
-          </div>
-        </div> -->
-      </main>
+      <table class="w-full mb-72">
+        <thead>
+          <tr class="border-b">
+            <th class="pl-12 pb-3 text-left text-sm">
+              <p class="text-gray-400">Usuario</p>
+            </th>
+            <th class="pr-6 pb-3 text-left text-sm">
+              <p class="text-gray-400">Creados</p>
+            </th>
+            <th class="pr-6 pb-3 text-left text-sm">
+              <p class="text-gray-400">Firmados</p>
+            </th>
+            <th class="pr-6 pb-3 text-left text-sm">
+              <p class="text-gray-400">Comenzados</p>
+            </th>
+            <th class="pr-6 pb-3 text-left text-sm">
+              <p class="text-gray-400">Rechazados</p>
+            </th>
+            <th class="pb-3 text-left text-sm">
+              <p class="text-gray-400">Efectividad</p>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="pl-8 py-2 font-bold">
+              <p>Todos</p>
+            </td>
+            <td class="text-sm pl-5 py-2 font-bold">
+              <p>26</p>
+            </td>
+            <td class="text-sm pl-6 py-2 font-bold">
+              <p>12</p>
+            </td>
+            <td class="text-sm pl-9 py-2 font-bold">
+              <p>11</p>
+            </td>
+            <td class="text-sm pl-9 py-2 font-bold">
+              <p>3</p>
+            </td>
+            <td class="text-sm pl-7 py-2 font-bold">
+              <p>46%</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="pl-8 py-2 text-sm">
+              <p>Ramiro Pedraza</p>
+            </td>
+            <td class="text-sm pl-5 py-2">
+              <p>23</p>
+            </td>
+            <td class="text-sm pl-6 py-2">
+              <p>10</p>
+            </td>
+            <td class="text-sm pl-9 py-2">
+              <p>10</p>
+            </td>
+            <td class="text-sm pl-9 py-2">
+              <p>3</p>
+            </td>
+            <td class="text-sm pl-7 py-2">
+              <p>43%</p>
+            </td>
+          </tr>
+          <tr>
+            <td class="pl-8 py-2 text-sm">
+              <p>Jaime Mezinas</p>
+            </td>
+            <td class="text-sm pl-6 py-2">
+              <p>3</p>
+            </td>
+            <td class="text-sm pl-7 py-2">
+              <p>2</p>
+            </td>
+            <td class="text-sm pl-10 py-2">
+              <p>1</p>
+            </td>
+            <td class="text-sm pl-9 py-2">
+              <p>0</p>
+            </td>
+            <td class="text-sm pl-7 py-2">
+              <p>66%</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
 </template>
 
 <script>
