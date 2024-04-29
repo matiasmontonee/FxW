@@ -19,14 +19,13 @@
         <!-- Paso 1: Cargar firmantes -->
         <div v-if="currentStep === 1">
           <div class="flex items-center justify-end m-6 mt-4">
-            <!-- TODO: si marca que va a firmar el documento... vamos a agarrar la info de perfil y completar los campos automáticamente... 
-              se tiene que validar que existan... por ahora lo dejamos off-->
+            <!-- TODO: si marca que va a firmar el documento... vamos a agarrar la info de perfil y completar los campos automáticamente... se tiene que validar que existan... por ahora lo dejamos off-->
             <!-- <div class="flex items-center">
               <p class="text-gray-400 mr-4">Voy a firmar este documento</p>
               <div class="relative">
                 <label class="inline-flex items-center">
                   <input type="checkbox" class="hidden" v-model="documentSigned" />
-                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': documentSigned }"></div>
+                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: documentSigned ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
                   <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': documentSigned }"></div>
                 </label>
               </div>
@@ -121,7 +120,7 @@
                 <div class="relative mr-4">
                   <label class="inline-flex items-center mt-1">
                     <input type="checkbox" class="hidden" v-model="automaticPositionChecked" />
-                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': automaticPositionChecked }"></div>
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: automaticPositionChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
                     <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': automaticPositionChecked }"></div>
                   </label>
                 </div>
@@ -134,7 +133,7 @@
                 <div class="relative mr-4">
                   <label class="inline-flex items-center mt-1">
                     <input type="checkbox" class="hidden" v-model="photoIdChecked" />
-                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': photoIdChecked }"></div>
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
                     <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': photoIdChecked }"></div>
                   </label>
                 </div>
@@ -147,7 +146,7 @@
                 <div class="relative mr-4">
                   <label class="inline-flex items-center mt-1">
                     <input type="checkbox" class="hidden" v-model="signAllChecked" />
-                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :class="{ 'bg-blue-800': signAllChecked }"></div>
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: signAllChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
                     <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': signAllChecked }"></div>
                   </label>
                 </div>
@@ -310,7 +309,7 @@ export default {
 
       // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 2 && this.fileNames.length === 0) {
-        this.errorMessage = 'Seleccione al menos un documento.';
+        this.errorMessage = 'Seleccione un documento.';
         return; // No avanzar al siguiente paso
       }
       
