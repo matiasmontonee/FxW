@@ -61,7 +61,33 @@
                   </div>
                   <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[1]?.method }} <span class="ml-4">+{{ solicitud.firmantes[1]?.phone ?? solicitud.firmantes[1]?.email }}</span></p>
                 </div>
+                <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 2" class="flex flex-col text-sm">
+                  <span>
+                    <i class="fas fa-circle mr-2" :class="{ 'text-green-400': solicitud.firmantes[2]?.status, 'text-gray-400': !solicitud.firmantes[2]?.status }"></i>
+                    {{ solicitud.firmantes[2]?.name }} {{ solicitud.firmantes[2]?.last_name }}
+                  </span>
+                  <div class="flex items-center mt-1 ml-6">
+                    <a :href="solicitud.firmantes[2]?.link" target="_blank" class="hover:text-blue-400 underline">{{ solicitud.firmantes[2]?.link }}</a>
+                    <i v-if="!copiedLinks.includes(solicitud.firmantes[2]?.link)" @click="copyLink(solicitud.firmantes[2]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                    <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
+                  </div>
+                  <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[2]?.method }} <span class="ml-4">+{{ solicitud.firmantes[2]?.phone ?? solicitud.firmantes[2]?.email }}</span></p>
+                </div>
               </div>
+              <!-- TODO: FIX THIS BS -->
+                <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 3" class="flex flex-col text-sm">
+                  <span>
+                    <i class="fas fa-circle mr-2" :class="{ 'text-green-400': solicitud.firmantes[3]?.status, 'text-gray-400': !solicitud.firmantes[3]?.status }"></i>
+                    {{ solicitud.firmantes[3]?.name }} {{ solicitud.firmantes[3]?.last_name }}
+                  </span>
+                  <div class="flex items-center mt-1 ml-6">
+                    <a :href="solicitud.firmantes[3]?.link" target="_blank" class="hover:text-blue-400 underline">{{ solicitud.firmantes[3]?.link }}</a>
+                    <i v-if="!copiedLinks.includes(solicitud.firmantes[3]?.link)" @click="copyLink(solicitud.firmantes[3]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                    <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
+                  </div>
+                  <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[3]?.method }} <span class="ml-4">+{{ solicitud.firmantes[3]?.phone ?? solicitud.firmantes[3]?.email }}</span></p>
+                </div>
+
             </td>
             <div @click="toggleRow(index)" class="flex items-end cursor-pointer">
               <i class="fas fa-chevron-down text-blue-400 text-xl pl-6 pr-6" :class="{ 'transform rotate-180': isRowExpanded(index) }"></i>
