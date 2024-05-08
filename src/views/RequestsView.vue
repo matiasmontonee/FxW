@@ -43,7 +43,7 @@
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 0">
                       <span>
                         <i class="fas fa-circle mr-2 mt-4"
-                          :class="{ 'text-green-400': solicitud.firmantes[0]?.status, 'text-gray-400': !solicitud.firmantes[0]?.status }"></i>
+                          :class="{ 'text-green-400': solicitud.firmantes[0]?.signed, 'text-gray-400': !solicitud.firmantes[0]?.signed }"></i>
                         {{ solicitud.firmantes[0]?.name }} {{ solicitud.firmantes[0]?.last_name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
@@ -61,7 +61,7 @@
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 1">
                       <span>
                         <i class="fas fa-circle mr-2"
-                          :class="{ 'text-green-400': solicitud.firmantes[1]?.status, 'text-gray-400': !solicitud.firmantes[1]?.status }"></i>
+                          :class="{ 'text-green-400': solicitud.firmantes[1]?.signed, 'text-gray-400': !solicitud.firmantes[1]?.signed }"></i>
                         {{ solicitud.firmantes[1]?.name }} {{ solicitud.firmantes[1]?.last_name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
@@ -79,7 +79,7 @@
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 2">
                       <span>
                         <i class="fas fa-circle mr-2"
-                          :class="{ 'text-green-400': solicitud.firmantes[2]?.status, 'text-gray-400': !solicitud.firmantes[2]?.status }"></i>
+                          :class="{ 'text-green-400': solicitud.firmantes[2]?.signed, 'text-gray-400': !solicitud.firmantes[2]?.signed }"></i>
                         {{ solicitud.firmantes[2]?.name }} {{ solicitud.firmantes[2]?.last_name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
@@ -101,7 +101,7 @@
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 3">
                       <span>
                         <i class="fas fa-circle mr-2"
-                          :class="{ 'text-green-400': solicitud.firmantes[3]?.status, 'text-gray-400': !solicitud.firmantes[3]?.status }"></i>
+                          :class="{ 'text-green-400': solicitud.firmantes[3]?.signed, 'text-gray-400': !solicitud.firmantes[3]?.signed }"></i>
                         {{ solicitud.firmantes[3]?.name }} {{ solicitud.firmantes[3]?.last_name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
@@ -119,7 +119,7 @@
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 4">
                       <span>
                         <i class="fas fa-circle mr-2"
-                          :class="{ 'text-green-400': solicitud.firmantes[4]?.status, 'text-gray-400': !solicitud.firmantes[4]?.status }"></i>
+                          :class="{ 'text-green-400': solicitud.firmantes[4]?.signed, 'text-gray-400': !solicitud.firmantes[4]?.signed }"></i>
                         {{ solicitud.firmantes[4]?.name }} {{ solicitud.firmantes[4]?.last_name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
@@ -137,7 +137,7 @@
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 5">
                       <span>
                         <i class="fas fa-circle mr-2"
-                          :class="{ 'text-green-400': solicitud.firmantes[5]?.status, 'text-gray-400': !solicitud.firmantes[5]?.status }"></i>
+                          :class="{ 'text-green-400': solicitud.firmantes[5]?.signed, 'text-gray-400': !solicitud.firmantes[5]?.signed }"></i>
                         {{ solicitud.firmantes[5]?.name }} {{ solicitud.firmantes[5]?.last_name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
@@ -160,7 +160,7 @@
                 :class="{ 'transform rotate-180': isRowExpanded(index) }"></i>
             </div>
             <td class="pl-5 pt-2 text-sm" style="vertical-align: top;">
-              0/2
+              <p>{{ solicitud.cantidad_firmados }}/{{ solicitud.cantidad_firmantes }}</p>
             </td>
             <td class="pt-2 text-sm" style="vertical-align: top;">
               {{ solicitud.created_at }}
@@ -175,12 +175,21 @@
         </tbody>
       </table>
     </div>
+
+  <!-- TODO: Next Page Button -->
+  <div class="flex justify-end fixed bottom-4 right-4">
+    <a href="#" class="bg-blue-400 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-500 transition-colors">
+      Next Page
+    </a>
+  </div>
+
   </main>
 </template>
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
 import axios from 'axios';
+
 
 export default {
   emits: ['login', 'logout'],
@@ -200,7 +209,6 @@ export default {
     };
   },
   created() {
-    // this.fetchDocumentosFirmados();
     this.fetchDocumentoStatus('id_seguimiento'); // Reemplazar id_seguimiento con valor real
     this.fetchSolicitudesGrupo('cliente_1'); // Reemplazar cliente_1 con valor real
     this.fetchTodasLasSolicitudes();
@@ -240,17 +248,6 @@ export default {
         }
       }, 2000);
     },
-    // TODO: This one is wrong
-    // fetchDocumentosFirmados() {
-    //   // Realiza la solicitud POST a la API para obtener los documentos firmados
-    //   axios.post('https://firmasxw.com/test/signatureRequest', {})
-    //     .then(response => {
-    //       this.documentosFirmados.push(response.data);
-    //     })
-    //     .catch(error => {
-    //       console.error('Error al obtener los documentos firmados:', error);
-    //     });
-    // },
     fetchDocumentoStatus(trackId) {
       // Realiza la solicitud GET a la API para obtener el estado de un documento
       axios.get(`https://private-anon-418fb06930-firmasxw.apiary-mock.com/api/signatureStatus/${trackId}`)
@@ -280,7 +277,7 @@ export default {
         'x-api-key': 'HxfBsetg67ZVeMUFprRwIrT2g5mcPn2V'
       };
 
-      axios.get('https://firmasxw.com/test/list', { headers })
+      axios.get('https://firmasxw.com/test/list?page=1', { headers })
         .then(response => {
           this.todasLasSolicitudes = response.data;
         })
