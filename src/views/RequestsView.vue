@@ -189,6 +189,8 @@
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
 import axios from 'axios';
+import { getCookie} from '../helpers/cookies';
+
 
 
 export default {
@@ -209,8 +211,6 @@ export default {
     };
   },
   created() {
-    this.fetchDocumentoStatus('id_seguimiento'); // Reemplazar id_seguimiento con valor real
-    this.fetchSolicitudesGrupo('cliente_1'); // Reemplazar cliente_1 con valor real
     this.fetchTodasLasSolicitudes();
   },
   methods: {
@@ -248,33 +248,13 @@ export default {
         }
       }, 2000);
     },
-    fetchDocumentoStatus(trackId) {
-      // Realiza la solicitud GET a la API para obtener el estado de un documento
-      axios.get(`https://private-anon-418fb06930-firmasxw.apiary-mock.com/api/signatureStatus/${trackId}`)
-        .then(response => {
-          this.documentoStatus = response.data;
-        })
-        .catch(error => {
-          console.error('Error al obtener el estado del documento:', error);
-        });
-    },
-    fetchSolicitudesGrupo(cliente) {
-      // Realiza la solicitud GET a la API para obtener las solicitudes de un grupo
-      axios.get(`https://private-anon-418fb06930-firmasxw.apiary-mock.com/api/listClient/${cliente}`)
-        .then(response => {
-          this.solicitudesGrupo = response.data;
-        })
-        .catch(error => {
-          console.error('Error al obtener las solicitudes del grupo:', error);
-        });
-    },
 
 
     // test real
     fetchTodasLasSolicitudes() {
       const headers = {
         'Content-Type': 'application/json',
-        'x-api-key': 'HxfBsetg67ZVeMUFprRwIrT2g5mcPn2V'
+        'x-api-key': getCookie('token')
       };
 
       axios.get('https://firmasxw.com/test/list?page=1', { headers })

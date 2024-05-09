@@ -98,6 +98,7 @@
 <script>
 import { googleLogout } from 'vue3-google-login';
 import axios from 'axios';
+import { getCookie } from '../helpers/cookies';
 
 export default {
   props: ['user'],
@@ -125,7 +126,7 @@ export default {
     fetchTokensData() {
       const headers = {
         'Content-Type': 'application/json',
-        'x-api-key': 'HxfBsetg67ZVeMUFprRwIrT2g5mcPn2V'
+        'x-api-key': getCookie('token')
       };
       // Realiza la solicitud GET a la API para obtener todas las solicitudes
       axios.get('https://firmasxw.com/test/tokensLeft', { headers })

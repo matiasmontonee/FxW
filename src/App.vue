@@ -9,7 +9,7 @@
 import { setCookie, eraseCookie, getCookie} from './helpers/cookies';
 
 async function createUser(email) {
-  const response = await fetch(`https://firmasxw.com/api/createUsrOnLogin/${email}`, {
+  const response = await fetch(`https://firmasxw.com/test/createUsrOnLogin/${email}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -18,6 +18,9 @@ async function createUser(email) {
   // TODO: Considerar en manejar errores de forma mas adecuada
   if (!response.ok) {
     throw new Error('Error creating user');
+  } else {
+    const responseBody = await response.json();
+    setCookie('token', responseBody.token, 7); // Save token as cookie
   }
 }
 

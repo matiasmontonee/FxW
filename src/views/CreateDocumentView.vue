@@ -98,7 +98,7 @@
 
         <!-- Paso 2: Cargar documento -->
         <div v-if="currentStep === 2">
-          <div class="flex items-center justify-between m-6" style="marginTop: 14px">
+          <div class="flex items-center justify-between m-6" style="margin-top: 14px">
             <div class="flex items-center text-lg">
               <input type="text" class="border-b border-gray-300 mr-4 placeholder-black focus:outline-none w-64" placeholder="Id / Nombre del documento">
               <i class="fas fa-edit text-gray-400"></i>
