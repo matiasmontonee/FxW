@@ -250,7 +250,7 @@ export default {
     },
 
 
-    // test real
+    // TODO: acomodar para obtener en que pagina estamos
     fetchTodasLasSolicitudes() {
       const headers = {
         'Content-Type': 'application/json',

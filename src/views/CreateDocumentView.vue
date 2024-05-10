@@ -331,6 +331,19 @@ export default {
       this.errorMessage = '';
       this.documentSelected = false;
 
+      // TODO: const reader = new FileReader();
+
+      // reader.onload = () => {
+      //   const base64Data = reader.result.split(',')[1]; // Extracting base64 data from result
+      //   // Now you can send base64Data to your API
+      //   this.sendToAPI(base64Data);
+
+      //   // Update UI after sending the data
+      //   this.fileNames = [file.name]; // Replace file names with the new file
+      //   this.loading = false;
+      //   this.documentSelected = true;
+      // };
+
       if (this.isValidFileType(file)) {
         setTimeout(() => {
           this.fileNames = [file.name]; // Reemplazar los nombres de archivo con el nuevo archivo
