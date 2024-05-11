@@ -100,7 +100,7 @@
         <div v-if="currentStep === 2">
           <div class="flex items-center justify-between m-6" style="margin-top: 14px">
             <div class="flex items-center text-lg">
-              <input type="text" class="border-b border-gray-300 mr-4 placeholder-black focus:outline-none w-64" placeholder="Id / Nombre del documento">
+              <input type="text" v-model="documentId" class="border-b border-gray-300 mr-4 placeholder-black focus:outline-none w-64" placeholder="Id / Nombre del documento">
               <i class="fas fa-edit text-gray-400"></i>
             </div>
             <div class="flex items-center">
@@ -113,7 +113,13 @@
             </div>
           </div>
 
-          <ul class="ml-6">
+          <!-- Error para ID o nombre del documento -->
+          <div v-if="documentIdError" class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center text-blue-900 flex justify-between items-center w-96">
+            <span class="ml-2 font-bold">{{ documentIdErrorMessage }}</span>
+            <button @click="removeErrorMessage('documentIdError')"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+          </div>
+
+          <!-- <ul class="ml-6">
             <li class="mb-2 text-gray-500 flex items-center justify-between w-80">
               <span>Posicionar automáticamente</span>
               <div class="flex items-center">
@@ -153,7 +159,7 @@
                 <i class="fas fa-info-circle text-xl mt-1"></i>
               </div>
             </li>
-          </ul>
+          </ul> -->
 
           <!-- DIV CONTENEDOR DE ARCHIVOS -->
           <div class="m-6" @dragover.prevent @drop.prevent="handleDrop">
@@ -174,9 +180,9 @@
           </div>
 
           <!-- MENSAJE DE ERROR -->
-          <div v-if="errorMessage" class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center text-blue-900 flex justify-between items-center w-96">
+          <div v-if="errorMessage" class="m-6 text-red-500 bg-red-100 p-2 rounded-md text-center text-blue-900 flex justify-between items-center w-96">
             <span class="ml-2 font-bold">{{ errorMessage }}</span>
-            <button @click="removeErrorMessage"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+            <button @click="removeErrorMessage('errorMessage')"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
           </div>
 
           <!-- MOSTRAR ARCHIVOS -->
@@ -237,9 +243,11 @@
                 </div>
             </div>
             <div class="flex justify-center">
-              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
-                <i class="fas fa-file mr-2"></i>Enviar documento
-              </button>
+              <router-link to="/requests?enviado=true">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
+                  <i class="fas fa-file mr-2"></i>Enviar documento
+                </button>
+              </router-link>
             </div>
           </div>
         </div>
@@ -258,7 +266,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 1,
+      currentStep: 3,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -269,6 +277,9 @@ export default {
       maxSignersError: false,
       maxSignersErrorMessage: 'Se ha alcanzado el límite máximo de firmantes (6).',
       documentSigned: false,
+      documentId: '',
+      documentIdError: false, 
+      documentIdErrorMessage: 'Ingrese el ID o nombre del documento.',
       automaticPositionChecked: false,
       photoIdChecked: false,
       selfieChecked: false,
@@ -307,10 +318,16 @@ export default {
         this.signerError = false;
       }
 
+      // Verificar si el campo del ID o nombre del documento está vacío
+      if (this.currentStep === 2 && !this.documentId.trim()) {
+        this.documentIdError = true;
+        return; // No avanzar al siguiente paso
+      }
+
       // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 2 && this.fileNames.length === 0) {
         this.errorMessage = 'Seleccione un documento.';
-        return; // No avanzar al siguiente paso
+        return;
       }
       
       // Si pasa todas las validaciones, avanzar al siguiente paso
@@ -361,8 +378,12 @@ export default {
         this.documentSelected = false; // Si no hay archivos seleccionados, documentSelected es falso
       }
     },
-    removeErrorMessage() {
-      this.errorMessage = ''; 
+    removeErrorMessage(errorType) {
+      if (errorType === 'documentIdError') {
+        this.documentIdError = false;
+      } else if (errorType === 'errorMessage') {
+        this.errorMessage = '';
+      }
     },
     isValidFileType(file) {
       const allowedExtensions = ['.pdf', '.docx', '.jpg', '.jpeg', '.png'];
