@@ -206,14 +206,16 @@
           </div>
 
           <div class="m-6">
+            <div v-for="(signer, index) in signersData" :key="'signer-' + index">
               <div class="flex items-center">
-                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">Claudia</p>
-                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">Alves</p>
-                <p class="border-gray-300 border-b-2 w-16 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">+549</p>
-                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">1154982376</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.name }}</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.lastName }}</p>
+                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.contact }}</p>
               </div>
-              <div class="flex items-center mb-8">
-                <a href="https://sign.rocketpin.com/store_token?tkn=7049" target="_blank" class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">https://sign.rocketpin.com/store_token?tkn=7049
+
+              <div class="flex items-center justify-start mt-4 mb-8">
+                <a href="https://sign.rocketpin.com/store_token?tkn=7049" target="_blank" class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">
+                  https://sign.rocketpin.com/store_token?tkn=7049
                   <span class="ml-10">
                     <i v-if="!copiedLinks.includes('https://sign.rocketpin.com/store_token?tkn=7049')" @click.prevent="copyLink('https://sign.rocketpin.com/store_token?tkn=7049')" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                     <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
@@ -225,23 +227,8 @@
                   <i class="fas fa-info-circle text-xl ml-2 text-gray-500"></i>
                 </div>
               </div>
-              <div class="flex items-center">
-                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">Claudia</p>
-                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-28">Alves</p>
-                <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">claudia@gmail.com</p>
-              </div>
-              <div class="flex items-center mb-12">
-                <a href="https://sign.rocketpin.com/store_token?tkn=7049" target="_blank" class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">https://sign.rocketpin.com/store_token?tkn=7049
-                  <span class="ml-10">
-                    <i v-if="!copiedLinks.includes('https://sign.rocketpin.com/store_token?tkn=7049')" @click.prevent="copyLink('https://sign.rocketpin.com/store_token?tkn=7049')" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
-                    <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
-                  </span>
-                </a>
-                <div class="flex items-center">
-                  <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
-                  <p>Enviar automáticamente</p>
-                </div>
             </div>
+
             <div class="flex justify-center">
               <router-link to="/requests?enviado=true">
                 <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
@@ -266,7 +253,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 3,
+      currentStep: 1,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -317,6 +304,17 @@ export default {
       if (this.currentStep === 1) {
         this.signerError = false;
       }
+
+      // Almacenar los datos de los firmantes en una propiedad del componente
+      this.signersData = this.signers.map(signer => ({
+        name: signer.name,
+        lastName: signer.lastName,
+        dni: signer.dni,
+        contact: signer.contact === 'wpp' ? `${signer.areaCode} ${signer.phoneNumber}` : signer.email
+      }));
+
+      // Mostrar los datos de los firmantes en la consola
+      console.log('Datos de los firmantes:', this.signersData);
 
       // Verificar si el campo del ID o nombre del documento está vacío
       if (this.currentStep === 2 && !this.documentId.trim()) {
