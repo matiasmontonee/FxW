@@ -175,23 +175,17 @@
         </tbody>
       </table>
     </div>
-
-  <!-- TODO: Next Page Button -->
-  <div class="flex justify-end fixed bottom-4 right-4">
-    <a href="#" class="bg-blue-400 text-white px-4 py-2 rounded-full shadow-md hover:bg-blue-500 transition-colors">
-      Next Page
-    </a>
-  </div>
-
   </main>
+
+  <div v-if="showMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 px-4 py-2 rounded text-center w-72 ml-12 z-50">
+    Documento agregado exitosamente
+  </div>
 </template>
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
 import axios from 'axios';
 import { getCookie} from '../helpers/cookies';
-
-
 
 export default {
   emits: ['login', 'logout'],
@@ -201,17 +195,26 @@ export default {
   },
   data() {
     return {
+      showMessage: false,
       sidebarOpen: false,
       documentosFirmados: [],
       documentoStatus: null,
       solicitudesGrupo: [],
       todasLasSolicitudes: [],
       expandedRows: [],
-      copiedLinks: []
+      copiedLinks: [],
     };
   },
   created() {
     this.fetchTodasLasSolicitudes();
+    const enviado = this.$route.query.enviado; // Mostrar y borrar el mensaje
+    if (enviado === 'true') {
+      this.showMessage = true;
+
+      setTimeout(() => {
+          this.showMessage = false;
+      }, 5000);
+    }
   },
   methods: {
     logout() {
