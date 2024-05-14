@@ -241,18 +241,16 @@
               <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{
                 signer.name }}</p>
               <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{
-                signer.lastName }}</p>
-              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{
-                signer.contact }}</p>
+                signer.method === 'wpp' ? 'WhatsApp' : 'Email' }}</p>
             </div>
 
             <div class="flex items-center justify-start mt-4 mb-8">
-              <a href="https://sign.rocketpin.com/store_token?tkn=7049" target="_blank"
+              <a :href="todasLasSolicitudes.urls[index].link" target="_blank"
                 class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">
-                https://sign.rocketpin.com/store_token?tkn=7049
+                {{ todasLasSolicitudes.urls[index].link }}
                 <span class="ml-10">
-                  <i v-if="!copiedLinks.includes('https://sign.rocketpin.com/store_token?tkn=7049')"
-                    @click.prevent="copyLink('https://sign.rocketpin.com/store_token?tkn=7049')"
+                  <i v-if="!copiedLinks.includes(todasLasSolicitudes.urls[index].link)"
+                    @click.prevent="copyLink(todasLasSolicitudes.urls[index].link)"
                     class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                   <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                 </span>
@@ -280,6 +278,8 @@
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
+import axios from 'axios';
+import { getCookie } from '../helpers/cookies';
 
 export default {
   emits: ['login', 'logout'],
@@ -323,18 +323,42 @@ export default {
         this.currentStep--;
       }
     },
-    createMission() {
-      // Crear la misión con los datos de los firmantes y el documento
-      const missionData = {
-        signers: this.signersData,
-        documentId: this.documentId,
-        document: this.base64Doc
+    async createMission() {
+
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': getCookie('token')
       };
 
-      // Enviar la misión a la API
-      console.log('Datos de la misión:', missionData);
+      const body = {
+        datos_firmantes: this.signersData,
+        // documentId: this.documentId,
+        document: this.base64Doc,
+        webhook_url: 'https://firmasxw.com/test/webhook',
+        cliente: 'luis'
+      };
+
+      try {
+        const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
+        this.todasLasSolicitudes = response.data;
+        console.log('Todas las solicitudes RESPONSE: ', this.todasLasSolicitudes);
+        return response.data; // Return the response data
+      } catch (error) {
+        console.error('Error al obtener todas las solicitudes:', error);
+        throw error; // Throw the error for handling
+      }
+
+      // // Crear la misión con los datos de los firmantes y el documento
+      // const missionData = {
+      //   signers: this.signersData,
+      //   documentId: this.documentId,
+      //   document: this.base64Doc
+      // };
+
+      // // Enviar la misión a la API
+      // console.log('Datos de la misión:', missionData);
     },
-    nextStep() {
+    async nextStep() {
       // Verificar si todos los campos del firmante están completos o el checkbox tildado
       if (this.currentStep === 1 && !this.documentSigned && this.signers.some(signer => {
         if (signer.contact === 'wpp') {
@@ -355,10 +379,10 @@ export default {
 
       // Almacenar los datos de los firmantes en una propiedad del componente
       this.signersData = this.signers.map(signer => ({
-        name: signer.name,
-        lastName: signer.lastName,
+        name: signer.name + ' ' + signer.lastName,
         dni: signer.dni,
-        contact: signer.contact === 'wpp' ? `${signer.areaCode}${signer.phoneNumber}` : signer.email
+        phone: signer.contact === 'wpp' ? `${signer.areaCode}${signer.phoneNumber}` : signer.email,
+        method: signer.contact
       }));
 
       // Mostrar los datos de los firmantes en la consola
@@ -376,19 +400,13 @@ export default {
         return;
       }
 
+      if (this.currentStep === 2) {
+        await this.createMission();
+      }
+
       // Si pasa todas las validaciones, avanzar al siguiente paso
       this.errorMessage = '';
       this.currentStep++;
-
-      if (this.currentStep === 3) {
-        // Enviar los datos a la API
-        // console.log('Datos de los firmantes:', this.signersData);
-        // console.log('ID / Nombre del documento:', this.documentId);
-        // console.log('Documentos seleccionados:', this.fileNames);
-        // console.log('Base64 del documento:', this.base64Doc);
-        this.createMission();
-
-      }
     },
     handleDrop(event) {
       const files = event.dataTransfer.files;

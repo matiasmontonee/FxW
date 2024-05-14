@@ -33,6 +33,7 @@
           </tr>
         </thead>
         <tbody>
+          <!-- TODO: Eliminar last_name?? -->
           <tr class="border-b" v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index">
             <td class="text-sm pl-6 py-2 flex items-center">
               <div>
@@ -163,10 +164,13 @@
               <p>{{ solicitud.cantidad_firmados }}/{{ solicitud.cantidad_firmantes }}</p>
             </td>
             <td class="pt-2 text-sm" style="vertical-align: top;">
-              {{ solicitud.created_at }}
+              {{ formatDate(solicitud.created_at) }}
             </td>
-            <td class="pt-2 text-sm" style="vertical-align: top;">
-              <p class="bg-green-400 text-white font-semibold px-3 py-0.5 rounded-xl mr-4 w-20 text-center">Firmado</p>
+            <td class="pt-2 text-sm " style="vertical-align: top;">
+              <p :class="{ 'bg-green-400': solicitud.is_finished, 'bg-gray-400': !solicitud.is_finished }"
+                class="text-white font-semibold px-0 py-0.5 rounded-xl mr-4 w-20 text-center">
+                {{ solicitud.is_finished ? 'Firmado' : 'Pendiente' }}
+              </p>
             </td>
             <td class="pl-4 text-sm" style="vertical-align: top;">
               <i class="far fa-file-pdf text-3xl text-blue-400 pt-1"></i>
@@ -177,7 +181,8 @@
     </div>
   </main>
 
-  <div v-if="showMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 px-4 py-2 rounded text-center w-72 ml-12 z-50">
+  <div v-if="showMessage"
+    class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 px-4 py-2 rounded text-center w-72 ml-12 z-50">
     Documento agregado exitosamente
   </div>
 </template>
@@ -185,7 +190,7 @@
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
 import axios from 'axios';
-import { getCookie} from '../helpers/cookies';
+import { getCookie } from '../helpers/cookies';
 
 export default {
   emits: ['login', 'logout'],
@@ -212,7 +217,7 @@ export default {
       this.showMessage = true;
 
       setTimeout(() => {
-          this.showMessage = false;
+        this.showMessage = false;
       }, 5000);
     }
   },
@@ -252,6 +257,13 @@ export default {
       }, 2000);
     },
 
+    formatDate(unixTimestamp) {
+      const date = new Date(unixTimestamp * 1000); // Convert UNIX timestamp to milliseconds
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    },
 
     // TODO: acomodar para obtener en que pagina estamos
     fetchTodasLasSolicitudes() {
