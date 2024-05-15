@@ -332,7 +332,7 @@ export default {
 
       const body = {
         datos_firmantes: this.signersData,
-        // documentId: this.documentId,
+        id_custom_client: this.documentId ?? null,
         document: this.base64Doc,
         webhook_url: 'https://firmasxw.com/test/webhook',
         cliente: 'luis'
@@ -347,16 +347,6 @@ export default {
         console.error('Error al obtener todas las solicitudes:', error);
         throw error; // Throw the error for handling
       }
-
-      // // Crear la misión con los datos de los firmantes y el documento
-      // const missionData = {
-      //   signers: this.signersData,
-      //   documentId: this.documentId,
-      //   document: this.base64Doc
-      // };
-
-      // // Enviar la misión a la API
-      // console.log('Datos de la misión:', missionData);
     },
     async nextStep() {
       // Verificar si todos los campos del firmante están completos o el checkbox tildado

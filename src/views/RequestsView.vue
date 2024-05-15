@@ -37,7 +37,7 @@
           <tr class="border-b" v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index">
             <td class="text-sm pl-6 py-2 flex items-center">
               <div>
-                {{ solicitud.id_seguimiento }}.pdf
+                {{ solicitud.id_custom_client }}.pdf
                 <div class="flex">
                   <div class="flex flex-col">
                     <!-- ONE -->

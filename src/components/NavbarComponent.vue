@@ -11,7 +11,7 @@
       </a>
       <div class="flex flex-col px-2 text-gray-100">
         <span class="flex flex-col items-center font-semibold rounded-2xl bg-blue-400 mb-2">
-          <span>Firmas</span>
+          <span>Firmas Restantes</span>
           <span class="text-xl">{{ tokenData.used }}/{{ tokenData.total }}</span>
         </span>
         <router-link to="/purchase" class="rounded-2xl bg-green-400 mb-14 hover:bg-green-300 text-center">Comprar
