@@ -375,9 +375,6 @@ export default {
         method: signer.contact
       }));
 
-      // Mostrar los datos de los firmantes en la consola
-      console.log('Datos de los firmantes:', this.signersData);
-
       // Verificar si el campo del ID o nombre del documento está vacío
       if (this.currentStep === 2 && !this.documentId.trim()) {
         this.documentIdError = true;
