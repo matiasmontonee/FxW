@@ -8,6 +8,7 @@ import vue3GoogleLogin from 'vue3-google-login';
 // mati: 402252794021-lou3mjb7gft8fgq6ubtcu9oqhpsqcap5.apps.googleusercontent.com
 const CLIENT_ID = "687160459640-codhvqgaivi057tcl5pbk3pldr7vuvi3.apps.googleusercontent.com";
 
+
 createApp(App)
   .use(router) 
   .use(vue3GoogleLogin, {

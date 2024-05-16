@@ -21,10 +21,16 @@
                 <input class="text-gray-400 focus:outline-none" placeholder="Fecha de Creación" />
               </div>
             </th>
-            <th class="pt-5 pb-3 text-left text-sm">
+            <th class="pr-20 pt-5 pb-3 text-left text-sm relative" ref="dropdownContainer">
               <div class="flex items-center">
-                <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
-                <input class="text-gray-400 focus:outline-none" placeholder="Estado" />
+                <i class="fas fa-chevron-down mr-2 text-blue-400 cursor-pointer" @click="toggleDropdown"></i>
+                <div class="relative">
+                  <button class="text-gray-400 focus:outline-none" @click="toggleDropdown">Estado</button>
+                  <ul v-if="showDropdown" class="absolute top-full bg-white border border-gray-300 shadow-md ">
+                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100">Firmado</li>
+                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100">Pendiente</li>
+                  </ul>
+                </div>
               </div>
             </th>
             <th class="pr-10 pt-5 pb-3 text-left text-sm">
@@ -33,7 +39,6 @@
           </tr>
         </thead>
         <tbody>
-          <!-- TODO: Eliminar last_name?? -->
           <tr class="border-b" v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index">
             <td class="text-sm pl-6 py-2 flex items-center">
               <div>
@@ -45,7 +50,7 @@
                       <span>
                         <i class="fas fa-circle mr-2 mt-4"
                           :class="{ 'text-green-400': solicitud.firmantes[0]?.signed, 'text-gray-400': !solicitud.firmantes[0]?.signed }"></i>
-                        {{ solicitud.firmantes[0]?.name }} {{ solicitud.firmantes[0]?.last_name }}
+                        {{ solicitud.firmantes[0]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
                         <a :href="solicitud.firmantes[0]?.link" target="_blank" class="hover:text-blue-400 underline">{{
@@ -56,14 +61,14 @@
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
                       <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[0]?.method }} <span class="ml-4">+{{
-                        solicitud.firmantes[0]?.phone ?? solicitud.firmantes[0]?.email }}</span></p>
+                          solicitud.firmantes[0]?.phone ?? solicitud.firmantes[0]?.email }}</span></p>
                     </div>
                     <!-- TWO -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 1">
                       <span>
                         <i class="fas fa-circle mr-2"
                           :class="{ 'text-green-400': solicitud.firmantes[1]?.signed, 'text-gray-400': !solicitud.firmantes[1]?.signed }"></i>
-                        {{ solicitud.firmantes[1]?.name }} {{ solicitud.firmantes[1]?.last_name }}
+                        {{ solicitud.firmantes[1]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
                         <a :href="solicitud.firmantes[1]?.link" target="_blank" class="hover:text-blue-400 underline">{{
@@ -74,14 +79,14 @@
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
                       <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[1]?.method }} <span class="ml-4">+{{
-                        solicitud.firmantes[1]?.phone ?? solicitud.firmantes[1]?.email }}</span></p>
+                          solicitud.firmantes[1]?.phone ?? solicitud.firmantes[1]?.email }}</span></p>
                     </div>
                     <!-- THREE -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 2">
                       <span>
                         <i class="fas fa-circle mr-2"
                           :class="{ 'text-green-400': solicitud.firmantes[2]?.signed, 'text-gray-400': !solicitud.firmantes[2]?.signed }"></i>
-                        {{ solicitud.firmantes[2]?.name }} {{ solicitud.firmantes[2]?.last_name }}
+                        {{ solicitud.firmantes[2]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
                         <a :href="solicitud.firmantes[2]?.link" target="_blank" class="hover:text-blue-400 underline">{{
@@ -92,7 +97,7 @@
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
                       <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[2]?.method }} <span class="ml-4">+{{
-                        solicitud.firmantes[2]?.phone ?? solicitud.firmantes[2]?.email }}</span></p>
+                          solicitud.firmantes[2]?.phone ?? solicitud.firmantes[2]?.email }}</span></p>
                     </div>
                   </div>
 
@@ -103,7 +108,7 @@
                       <span>
                         <i class="fas fa-circle mr-2"
                           :class="{ 'text-green-400': solicitud.firmantes[3]?.signed, 'text-gray-400': !solicitud.firmantes[3]?.signed }"></i>
-                        {{ solicitud.firmantes[3]?.name }} {{ solicitud.firmantes[3]?.last_name }}
+                        {{ solicitud.firmantes[3]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
                         <a :href="solicitud.firmantes[3]?.link" target="_blank" class="hover:text-blue-400 underline">{{
@@ -114,14 +119,14 @@
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
                       <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[3]?.method }} <span class="ml-4">+{{
-                        solicitud.firmantes[3]?.phone ?? solicitud.firmantes[3]?.email }}</span></p>
+                          solicitud.firmantes[3]?.phone ?? solicitud.firmantes[3]?.email }}</span></p>
                     </div>
                     <!-- FIVE -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 4">
                       <span>
                         <i class="fas fa-circle mr-2"
                           :class="{ 'text-green-400': solicitud.firmantes[4]?.signed, 'text-gray-400': !solicitud.firmantes[4]?.signed }"></i>
-                        {{ solicitud.firmantes[4]?.name }} {{ solicitud.firmantes[4]?.last_name }}
+                        {{ solicitud.firmantes[4]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
                         <a :href="solicitud.firmantes[4]?.link" target="_blank" class="hover:text-blue-400 underline">{{
@@ -132,14 +137,14 @@
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
                       <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[4]?.method }} <span class="ml-4">+{{
-                        solicitud.firmantes[4]?.phone ?? solicitud.firmantes[4]?.email }}</span></p>
+                          solicitud.firmantes[4]?.phone ?? solicitud.firmantes[4]?.email }}</span></p>
                     </div>
                     <!-- SIX -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 5">
                       <span>
                         <i class="fas fa-circle mr-2"
                           :class="{ 'text-green-400': solicitud.firmantes[5]?.signed, 'text-gray-400': !solicitud.firmantes[5]?.signed }"></i>
-                        {{ solicitud.firmantes[5]?.name }} {{ solicitud.firmantes[5]?.last_name }}
+                        {{ solicitud.firmantes[5]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
                         <a :href="solicitud.firmantes[5]?.link" target="_blank" class="hover:text-blue-400 underline">{{
@@ -150,7 +155,7 @@
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
                       <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[5]?.method }} <span class="ml-4">+{{
-                        solicitud.firmantes[5]?.phone ?? solicitud.firmantes[5]?.email }}</span></p>
+                          solicitud.firmantes[5]?.phone ?? solicitud.firmantes[5]?.email }}</span></p>
                     </div>
                   </div>
                 </div>
@@ -163,7 +168,7 @@
             <td class="pl-5 pt-2 text-sm" style="vertical-align: top;">
               <p>{{ solicitud.cantidad_firmados }}/{{ solicitud.cantidad_firmantes }}</p>
             </td>
-            <td class="pt-2 text-sm" style="vertical-align: top;">
+            <td class="pl-8 pt-2 text-sm" style="vertical-align: top;">
               {{ formatDate(solicitud.created_at) }}
             </td>
             <td class="pt-2 text-sm " style="vertical-align: top;">
@@ -200,6 +205,7 @@ export default {
   },
   data() {
     return {
+      showDropdown: false,
       showMessage: false,
       sidebarOpen: false,
       documentosFirmados: [],
@@ -225,6 +231,24 @@ export default {
     logout() {
       this.$emit('logout');
     },
+
+    // Dropdown methods
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+      if (this.showDropdown) {
+        this.$nextTick(() => {
+          document.addEventListener('click', this.closeDropdownOnClickOutside);
+        });
+      } else {
+        document.removeEventListener('click', this.closeDropdownOnClickOutside);
+      }
+    },
+    closeDropdownOnClickOutside(event) {
+      if (!this.$refs.dropdownContainer.contains(event.target)) {
+        this.showDropdown = false;
+      }
+    },
+  
     toggleSidebar() {
       this.sidebarOpen = !this.sidebarOpen;
     },
@@ -279,7 +303,11 @@ export default {
         .catch(error => {
           console.error('Error al obtener todas las solicitudes:', error);
         });
+    },
+    beforeDestroy() {
+      document.removeEventListener('click', this.closeDropdownOnClickOutside);
     }
   }
+
 }
 </script>

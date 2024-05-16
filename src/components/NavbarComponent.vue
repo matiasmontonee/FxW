@@ -124,8 +124,10 @@ export default {
       tokenData: 0
     };
   },
-  created() {
-    this.fetchTokensData();
+  mounted() {
+    if (!this.tokenData) {
+      this.fetchTokensData();
+    }
   },
   methods: {
     logout() {
