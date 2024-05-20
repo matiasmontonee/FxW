@@ -42,8 +42,11 @@
           <tr class="border-b" v-for="(solicitud, index) in todasLasSolicitudes" :key="'row-' + index">
             <td class="text-sm pl-6 py-2 flex items-center">
               <div>
-                {{ solicitud.id_custom_client }}.pdf
-                <div class="flex">
+                <div @click="toggleRow(index)" class="flex items-end cursor-pointer">
+                  {{ solicitud.id_custom_client }}.pdf
+                  <i class="fas fa-chevron-down text-blue-400 ml-2 mb-0.5" :class="{ 'transform rotate-180': isRowExpanded(index) }"></i>
+                </div>
+                <div class="flex overflow-x-auto">
                   <div class="flex flex-col">
                     <!-- ONE -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 0">
@@ -130,9 +133,6 @@
                 </div>
               </div>
             </td>
-            <div @click="toggleRow(index)" class="flex items-end cursor-pointer">
-              <i class="fas fa-chevron-down text-blue-400 text-xl pl-6 pr-6" :class="{ 'transform rotate-180': isRowExpanded(index) }"></i>
-            </div>
             <td class="pl-5 pt-2 text-sm" style="vertical-align: top;">
               <p>{{ solicitud.cantidad_firmados }}/{{ solicitud.cantidad_firmantes }}</p>
             </td>
@@ -145,7 +145,9 @@
               </p>
             </td>
             <td class="pl-4 text-sm" style="vertical-align: top;">
-              <i class="far fa-file-pdf text-3xl text-blue-400 pt-1"></i>
+              <a :href="solicitud.firmantes[0]?.link" target="_blank">
+                <i class="far fa-file-pdf text-3xl text-blue-400 hover:text-blue-300"></i>
+              </a>
             </td>
           </tr>
         </tbody>
