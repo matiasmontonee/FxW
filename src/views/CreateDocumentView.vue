@@ -150,16 +150,16 @@
 
       <!-- Paso 3: Enviar -->
       <div v-if="currentStep === 3">
-        <div class="flex items-center justify-end m-6 mt-4">
+        <!-- <div class="flex items-center justify-end m-6 mt-4">
           <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6"><i class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver</button>
           <button class="text-gray-500 hover:text-gray-400 font-bold">Continuar<i class="fas fa-arrow-right ml-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i></button>
-        </div>
+        </div> -->
 
         <div class="m-6">
           <div v-for="(signer, index) in signersData" :key="'signer-' + index">
             <div class="flex items-center">
-              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{signer.name }}</p>
-              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{signer.method === 'wpp' ? 'WhatsApp' : 'Email' }}</p>
+              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.name }}</p>
+              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.method === 'wpp' ? '+' + signer.phone : signer.email }}</p>
             </div>
 
             <div class="flex items-center justify-start mt-4 mb-8">
@@ -179,6 +179,9 @@
           </div>
 
           <div class="flex justify-center">
+            <button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 font-bold rounded-full mr-4">
+                <i class="fas fa-file mr-2"></i>Actualizar datos
+            </button>
             <router-link to="/requests?enviado=true">
               <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
                 <i class="fas fa-file mr-2"></i>Enviar documento
@@ -246,7 +249,7 @@ export default {
         return; // No avanzar al siguiente paso
       }
 
-      // Limpiar el mensaje de error de los firmantes al avanzar al siguiente paso después de haber ingresado nombres de firmantes
+      // Limpiar msj de error de firmantes al avanzar de paso después de haber ingresado los nombres
       if (this.currentStep === 1) {
         this.signerError = false;
       }
@@ -255,7 +258,8 @@ export default {
       this.signersData = this.signers.map(signer => ({
         name: signer.name + ' ' + signer.lastName,
         dni: signer.dni,
-        phone: signer.contact === 'wpp' ? `${signer.areaCode}${signer.phoneNumber}` : signer.email,
+        email: signer.email,
+        phone: `${signer.areaCode}${signer.phoneNumber}`,
         method: signer.contact
       }));
 
