@@ -155,7 +155,7 @@
     </div>
   </main>
 
-  <div v-if="showMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 px-4 py-2 rounded text-center w-72 ml-12 z-50">Documento agregado exitosamente</div>
+  <div v-if="showMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 px-4 py-2 rounded text-center w-72 ml-12 z-50">Documento enviado</div>
 </template>
 
 <script>
