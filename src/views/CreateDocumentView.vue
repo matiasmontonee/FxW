@@ -103,9 +103,8 @@
             <i class="fas fa-edit text-gray-400"></i>
           </div>
           <div class="flex items-center">
-            <button @click="previousStep" class="text-gray-500 hover:text-gray-400 font-bold mr-6"><i class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver</button>
-            <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">
-              Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i></button>
+            <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6"><i class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver</button>
+            <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i></button>
           </div>
         </div>
 
@@ -114,6 +113,35 @@
           <span class="ml-2 font-bold">{{ documentIdErrorMessage }}</span>
           <button @click="removeErrorMessage('documentIdError')"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
         </div>
+
+        <ul class="ml-6">
+          <li class="mb-2 text-gray-500 flex items-center justify-between w-80">
+            <span>Posicionar automáticamente</span>
+            <div class="flex items-center">
+              <div class="relative mr-4">
+                <label class="inline-flex items-center mt-1">
+                  <input type="checkbox" class="hidden" v-model="automaticPositionChecked" />
+                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: automaticPositionChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
+                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': automaticPositionChecked }"></div>
+                </label>
+              </div>
+              <i class="fas fa-info-circle text-xl mt-1"></i>
+            </div>
+          </li>
+          <li class="mb-2 text-gray-500 flex items-center justify-between w-80">
+            <span>Pedir foto de DNI/CI + foto Selfie</span>
+            <div class="flex items-center">
+              <div class="relative mr-4">
+                <label class="inline-flex items-center mt-1">
+                  <input type="checkbox" class="hidden" v-model="photoIdChecked" />
+                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
+                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': photoIdChecked }"></div>
+                </label>
+              </div>
+              <i class="fas fa-info-circle text-xl mt-1"></i>
+            </div>
+          </li>
+        </ul>
 
         <!-- DIV CONTENEDOR DE ARCHIVOS -->
         <div class="m-6" @dragover.prevent @drop.prevent="handleDrop">
@@ -219,6 +247,8 @@ export default {
       maxSignersErrorMessage: 'Se ha alcanzado el límite máximo de firmantes (6).',
       documentSigned: false,
       documentId: '',
+      automaticPositionChecked: false,
+      photoIdChecked: false,
       copiedLinks: [],
       base64Doc: ''
     };
