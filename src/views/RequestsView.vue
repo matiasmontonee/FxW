@@ -155,11 +155,12 @@
     </div>
   </main>
 
-  <div v-if="showMessage" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-200 text-green-800 px-4 py-2 rounded text-center w-72 ml-12 z-50">Documento enviado</div>
+  <PopUpComponent :show="showPopUp" :message="PopUpMessage" />
 </template>
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
+import PopUpComponent from '../components/PopUpComponent.vue';
 import axios from 'axios';
 import { getCookie } from '../helpers/cookies';
 
@@ -167,7 +168,8 @@ export default {
   emits: ['login', 'logout'],
   props: ['user'],
   components: {
-    NavbarComponent
+    NavbarComponent,
+    PopUpComponent
   },
   data() {
     return {
@@ -180,16 +182,17 @@ export default {
       todasLasSolicitudes: [],
       expandedRows: [],
       copiedLinks: [],
+      showPopUp: false,
+      PopUpMessage: 'Documento Enviado'
     };
   },
   created() {
     this.fetchTodasLasSolicitudes();
-    const enviado = this.$route.query.enviado; // Mostrar y borrar el mensaje
+    const enviado = this.$route.query.enviado; // Mostrar y cerrar popup
     if (enviado === 'true') {
-      this.showMessage = true;
-
+      this.showPopUp = true;
       setTimeout(() => {
-        this.showMessage = false;
+        this.showPopUp = false;
       }, 5000);
     }
   },
@@ -197,7 +200,6 @@ export default {
     logout() {
       this.$emit('logout');
     },
-
     // Dropdown methods
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
@@ -214,7 +216,6 @@ export default {
         this.showDropdown = false;
       }
     },
-  
     toggleSidebar() {
       this.sidebarOpen = !this.sidebarOpen;
     },
@@ -246,7 +247,6 @@ export default {
         }
       }, 2000);
     },
-
     formatDate(unixTimestamp) {
       const date = new Date(unixTimestamp * 1000); // Convert UNIX timestamp to milliseconds
       const day = date.getDate().toString().padStart(2, '0');
@@ -254,7 +254,6 @@ export default {
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
     },
-
     // TODO: acomodar para obtener en que pagina estamos
     fetchTodasLasSolicitudes() {
       const headers = {
@@ -274,6 +273,5 @@ export default {
       document.removeEventListener('click', this.closeDropdownOnClickOutside);
     }
   }
-
 }
 </script>
