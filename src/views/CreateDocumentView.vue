@@ -220,10 +220,13 @@
       </div>
     </div>
   </main>
+
+  <PopUpComponent :show="showPopUp" :message="PopUpMessage" />
 </template>
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
+import PopUpComponent from '../components/PopUpComponent.vue';
 import axios from 'axios';
 import { getCookie } from '../helpers/cookies';
 
@@ -231,7 +234,8 @@ export default {
   emits: ['login', 'logout'],
   props: ['user'],
   components: {
-    NavbarComponent
+    NavbarComponent,
+    PopUpComponent
   },
   data() {
     return {
@@ -250,7 +254,9 @@ export default {
       automaticPositionChecked: false,
       photoIdChecked: false,
       copiedLinks: [],
-      base64Doc: ''
+      base64Doc: '',
+      showPopUp: false,
+      PopUpMessage: 'Por favor corrobore los datos'
     };
   },
   methods: {
@@ -299,8 +305,13 @@ export default {
         return;
       }
 
+      // Crear doc y mostrar popup
       if (this.currentStep === 2) {
         await this.createMission();
+        this.showPopUp = true;
+        setTimeout(() => {
+          this.showPopUp = false;
+        }, 5000);
       }
 
       // Si pasa todas las validaciones, avanzar al siguiente paso
