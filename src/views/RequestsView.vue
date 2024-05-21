@@ -9,7 +9,7 @@
             <th class="pl-6 pt-5 pb-3 text-left text-sm">
               <div class="flex items-center">
                 <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
-                <input class="text-gray-400 focus:outline-none" placeholder="Id Documento" />
+                <input type="text" v-model="searchTerm" @input="searchDocuments" class="text-gray-400 focus:outline-none" placeholder="Id Documento" />
               </div>
             </th>
             <th class="pr-10 pt-5 pb-3 text-left text-sm">
@@ -18,7 +18,7 @@
             <th class="pt-5 pb-3 text-left text-sm">
               <div class="flex items-center">
                 <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
-                <input class="text-gray-400 focus:outline-none" placeholder="Fecha de Creación" />
+                <input type="date" v-model="searchDate" @input="searchDocuments" class="text-gray-400 focus:outline-none" placeholder="Fecha de Creación" />
               </div>
             </th>
             <th class="pr-20 pt-5 pb-3 text-left text-sm relative" ref="dropdownContainer">
@@ -182,6 +182,7 @@ export default {
       todasLasSolicitudes: [],
       expandedRows: [],
       copiedLinks: [],
+      searchTerm: '',
       showPopUp: false,
       PopUpMessage: 'Documento Enviado'
     };
@@ -254,6 +255,27 @@ export default {
       const year = date.getFullYear();
       return `${day}/${month}/${year}`;
     },
+    searchDocuments() {
+  const searchTerm = this.searchTerm.trim().toLowerCase();
+  const searchDate = this.searchDate;
+
+  // Guardar una copia de todas las solicitudes originales
+  const todasLasSolicitudesOriginal = [...this.todasLasSolicitudes];
+
+  // Si tanto el término de búsqueda como la fecha de búsqueda están vacíos, mostrar todas las solicitudes
+  if (!searchTerm && !searchDate) {
+    this.todasLasSolicitudes = todasLasSolicitudesOriginal;
+    return;
+  }
+
+  // Filtrar las solicitudes por ID de documento y fecha de creación
+  this.todasLasSolicitudes = todasLasSolicitudesOriginal.filter(solicitud => {
+    const matchesSearchTerm = !searchTerm || solicitud.id_custom_client.toString().toLowerCase().includes(searchTerm);
+    const matchesSearchDate = !searchDate || this.formatDate(solicitud.created_at) === searchDate;
+    return matchesSearchTerm && matchesSearchDate;
+  });
+},
+
     // TODO: acomodar para obtener en que pagina estamos
     fetchTodasLasSolicitudes() {
       const headers = {
