@@ -23,7 +23,7 @@
         <i class="fas fa-home mr-2 p-1"
           :class="{ 'text-blue-400 bg-white rounded-full': $route.path === '/requests' }"></i> Solicitudes
       </router-link>
-      <router-link to="/reports"
+      <!-- <router-link to="/reports"
         :class="{ 'bg-blue-400': $route.path === '/reports', 'rounded-full text-white font-bold': $route.path === '/reports', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/reports' }"
         class="mr-1 p-2 mb-2 ml-2 break-all">
         <i class="fas fa-chart-line mr-2 p-1"
@@ -34,7 +34,7 @@
         class="mr-1 p-2 mb-2 ml-2 break-all">
         <i class="fas fa-user mr-2 p-1"
           :class="{ 'text-blue-400 bg-white rounded-full': $route.path === '/contacts' }"></i> Contactos
-      </router-link>
+      </router-link> -->
       <router-link to="/profile"
         :class="{ 'bg-blue-400': $route.path === '/profile', 'rounded-full text-white font-bold': $route.path === '/profile', 'hover:bg-blue-300 hover:rounded-full hover:text-white': $route.path !== '/profile' }"
         class="mr-1 p-2 mb-16 ml-2 break-all">
@@ -80,16 +80,14 @@
         <button @click="toggleSidebar" class="block lg:hidden rounded"><i class="fas fa-bars text-2xl"></i></button>
         <div class="flex items-center">
           <router-link to="/newdocument">
-            <button class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear
-              documento</button>
+            <button class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear documento</button>
           </router-link>
           <div class="items-center py-1 px-2 rounded-xl cursor-pointer" @click="toggleDropdown">
             <i class="fas fa-user text-2xl"></i>
           </div>
           <div v-show="showDropdown" class="lg:hidden absolute right-5 mt-52 w-64 bg-white rounded-md shadow-2xl z-10">
             <ul>
-              <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture"
-                  alt="User" class="rounded-full h-5 w-4.5 mr-2">
+              <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture" alt="User" class="rounded-full h-5 w-4.5 mr-2">
                 <span v-if="user && user.name">{{ user.name.split(' ')[0] }}</span>
               </li>
               <li>
