@@ -205,16 +205,21 @@
                 </span>
               </a>
               <div class="flex items-center">
+                <i v-if="signer.method === 'mail'" class="fas fa-envelope text-xl mr-2 text-gray-500"></i>
+                <i v-else-if="signer.method === 'wpp'" class="fas fa-phone-alt text-xl mr-2 text-gray-500"></i>
                 <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
                 <p>Enviar automáticamente</p>
-                <i class="fas fa-info-circle text-xl ml-2 text-gray-500"></i>
+                <i @click="toggleInfo('someInfoType')" class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
+                <div v-if="showInfoMessage" class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/4 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-48 mb-32">
+                  <p>Envía el mensaje automáticamente mediante el contacto seleccionado.</p>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="flex justify-center">
             <button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 font-bold rounded-full mr-4">
-                <i class="fas fa-file mr-2"></i>Actualizar datos
+                <i class="fas fa-pen mr-2"></i>Actualizar datos
             </button>
             <router-link to="/requests?enviado=true">
               <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
@@ -228,11 +233,13 @@
   </main>
 
   <PopUpComponent :show="showPopUp" :message="PopUpMessage" />
+  <ModalPurchaseComponent v-if="showLimitExceededModal" />
 </template>
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
 import PopUpComponent from '../components/PopUpComponent.vue';
+import ModalPurchaseComponent from '../components/ModalPurchaseComponent.vue';
 import axios from 'axios';
 import { getCookie } from '../helpers/cookies';
 
@@ -241,7 +248,8 @@ export default {
   props: ['user'],
   components: {
     NavbarComponent,
-    PopUpComponent
+    PopUpComponent,
+    ModalPurchaseComponent
   },
   data() {
     return {
@@ -263,6 +271,7 @@ export default {
       copiedLinks: [],
       base64Doc: '',
       showPopUp: false,
+      showLimitExceededModal: false,
       PopUpMessage: 'Por favor corrobore los datos'
     };
   },
@@ -348,8 +357,13 @@ export default {
         console.log('Todas las solicitudes RESPONSE: ', this.todasLasSolicitudes);
         return response.data; // Return the response data
       } catch (error) {
-        console.error('Error al obtener todas las solicitudes:', error);
-        throw error; // Throw the error for handling
+        if (error.response && error.response.status === 429) {
+          // Si la solicitud falla debido a "Demasiadas solicitudes", muestra la modal
+          this.showLimitExceededModal = true;
+        } else {
+          // Manejar otros errores de manera diferente, si es necesario
+          console.error('Error en la solicitud:', error);
+        }
       }
     },
     handleDrop(event) {
