@@ -256,28 +256,26 @@ export default {
       return `${day}/${month}/${year}`;
     },
     searchDocuments() {
-  const searchTerm = this.searchTerm.trim().toLowerCase();
-  const searchDate = this.searchDate;
+      const searchTerm = this.searchTerm.trim().toLowerCase();
+      const searchDate = this.searchDate;
 
-  // Guardar una copia de todas las solicitudes originales
-  const todasLasSolicitudesOriginal = [...this.todasLasSolicitudes];
+      // Guardar una copia de todas las solicitudes originales
+      const todasLasSolicitudesOriginal = [...this.todasLasSolicitudes];
 
-  // Si tanto el término de búsqueda como la fecha de búsqueda están vacíos, mostrar todas las solicitudes
-  if (!searchTerm && !searchDate) {
-    this.todasLasSolicitudes = todasLasSolicitudesOriginal;
-    return;
-  }
+      // Si tanto el término de búsqueda como la fecha de búsqueda están vacíos, mostrar todas las solicitudes
+      if (!searchTerm && !searchDate) {
+        this.todasLasSolicitudes = todasLasSolicitudesOriginal;
+        return;
+      }
 
-  // Filtrar las solicitudes por ID de documento y fecha de creación
-  this.todasLasSolicitudes = todasLasSolicitudesOriginal.filter(solicitud => {
-    const matchesSearchTerm = !searchTerm || solicitud.id_custom_client.toString().toLowerCase().includes(searchTerm);
-    const matchesSearchDate = !searchDate || this.formatDate(solicitud.created_at) === searchDate;
-    return matchesSearchTerm && matchesSearchDate;
-  });
-},
-
-    // TODO: acomodar para obtener en que pagina estamos
-    fetchTodasLasSolicitudes() {
+      // Filtrar las solicitudes por ID de documento y fecha de creación
+      this.todasLasSolicitudes = todasLasSolicitudesOriginal.filter(solicitud => {
+        const matchesSearchTerm = !searchTerm || solicitud.id_custom_client.toString().toLowerCase().includes(searchTerm);
+        const matchesSearchDate = !searchDate || this.formatDate(solicitud.created_at) === searchDate;
+        return matchesSearchTerm && matchesSearchDate;
+      });
+    },
+    fetchTodasLasSolicitudes() { // TODO: acomodar para obtener en que pagina estamos
       const headers = {
         'Content-Type': 'application/json',
         'x-api-key': getCookie('token')
