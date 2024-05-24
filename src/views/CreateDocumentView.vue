@@ -192,8 +192,10 @@
         <div class="m-6">
           <div v-for="(signer, index) in signersData" :key="'signer-' + index">
             <div class="flex items-center">
-              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.name }}</p>
-              <p class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-6">{{ signer.method === 'wpp' ? '+' + signer.phone : signer.email }}</p>
+              <input type="text" v-model="signer.name" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Nombre">
+              <input type="text" v-model="signer.lastName" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Apellido">
+              <input v-if="signer.method === 'wpp'" type="number" v-model="signer.phone" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Número">
+              <input v-else type="text" v-model="signer.email" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Correo">
             </div>
 
             <div class="flex items-center justify-start mt-4 mb-8">
@@ -210,7 +212,7 @@
                 <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
                 <p>Enviar automáticamente</p>
                 <i @click="toggleInfo('someInfoType')" class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
-                <div v-if="showInfoMessage" class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/4 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-48 mb-32">
+                <div v-if="showInfoMessage" class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/5 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-4 mt-32">
                   <p>Envía el mensaje automáticamente mediante el contacto seleccionado.</p>
                 </div>
               </div>
@@ -218,7 +220,7 @@
           </div>
 
           <div class="flex justify-center">
-            <button class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 font-bold rounded-full mr-4">
+            <button @click="updateData" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 font-bold rounded-full mr-4">
                 <i class="fas fa-pen mr-2"></i>Actualizar datos
             </button>
             <router-link to="/requests?enviado=true">
@@ -311,7 +313,8 @@ export default {
 
       // Almacenar los datos de los firmantes en una propiedad del componente
       this.signersData = this.signers.map(signer => ({
-        name: signer.name + ' ' + signer.lastName,
+        name: signer.name,
+        lastName: signer.lastName,
         dni: signer.dni,
         email: signer.email,
         phone: `${signer.areaCode}${signer.phoneNumber}`,
@@ -336,6 +339,26 @@ export default {
       // Si pasa todas las validaciones, avanzar al siguiente paso
       this.errorMessage = '';
       this.currentStep++;
+    },
+    updateData() { // Datos actualizados de los input
+      const updatedSignersData = this.signersData.map(signer => ({
+        name: signer.name,
+        lastName: signer.lastName,
+        dni: signer.dni,
+        email: signer.email,
+        phone: signer.phone,
+        method: signer.method
+      }));
+
+      // Mostrar popup
+      this.PopUpMessage = 'Datos actualizados';
+      this.showPopUp = true;
+
+      setTimeout(() => {
+        this.showPopUp = false;
+      }, 5000);
+
+      console.log('Datos actualizados:', updatedSignersData);
     },
     async createMission() {
       const headers = {
