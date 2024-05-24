@@ -46,7 +46,7 @@
             <div class="flex items-center">
               <input type="text" v-model="signer.name" :placeholder="index === 0 ? 'Nombre firmante' : 'Nombre firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
               <input type="text" v-model="signer.lastName" :placeholder="index === 0 ? 'Apellido firmante' : 'Apellido firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
-              <input type="number" v-model="signer.dni" :placeholder="index === 0 ? 'DNI / CI firmante' : 'DNI / CI firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
+              <input @input="validateDNI(index)" type="text" v-model="signer.dni" :placeholder="index === 0 ? 'DNI / CI firmante' : 'DNI / CI firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
             </div>
             <div class="flex items-center">
               <select v-model="signer.contact" class="p-2 mr-10 w-36 rounded border border-gray-300">
@@ -286,6 +286,14 @@ export default {
     },
     toggleInfo(infoType) { // Click ícono info
       this.showInfoMessage = this.showInfoMessage === infoType ? null : infoType;
+    },
+    validateDNI(index) { // Permitir solo números y los caracteres ., -, /
+      const regex = /^[0-9./-]*$/;
+      const dni = this.signers[index].dni;
+      
+      if (!regex.test(dni)) { // Elimina caracteres no permitidos
+        this.signers[index].dni = dni.replace(/[^0-9./-]/g, '');
+      }
     },
     previousStep() {
       if (this.currentStep > 1) {
