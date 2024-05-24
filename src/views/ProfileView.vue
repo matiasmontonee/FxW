@@ -24,7 +24,7 @@
           <input type="text" placeholder="Nombre" v-model="datosPersonales.nombre" class="border-gray-300 border-b-2 w-1/4 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-4">
           <input type="text" placeholder="Apellido" v-model="datosPersonales.apellido" class="border-gray-300 border-b-2 w-1/4 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
         </div>
-        <input type="number" placeholder="DNI / CI" v-model="datosPersonales.dni" class="border-gray-300 border-b-2 w-1/4 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
+        <input @input="validateDNI(index)" type="text" placeholder="DNI / CI" v-model="datosPersonales.dni" class="border-gray-300 border-b-2 w-1/4 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
         <div class="flex">
           <input type="number" placeholder="+549" v-model="datosPersonales.telefonoCodigo" class="border-gray-300 border-b-2 w-20 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-4">
           <input type="number" placeholder="1137681841" v-model="datosPersonales.telefonoNumero" class="border-gray-300 border-b-2 w-1/4 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
@@ -87,33 +87,53 @@ export default {
     toggleInfo() {
       this.showInfoMessage = !this.showInfoMessage;
     },
-    guardarDatos() {
-      const empresaEmpty = Object.values(this.empresa).some(value => value === '');
-      const datosPersonalesEmpty = Object.values(this.datosPersonales).some(value => value === '');
-      const empresaComplete = Object.values(this.empresa).every(value => value !== '');
-      const datosPersonalesComplete = Object.values(this.datosPersonales).every(value => value !== '');
-
-      if (empresaEmpty || datosPersonalesEmpty) {
-        this.error = 'Por favor, completa todos los campos.';
-      } else if (!empresaComplete || !datosPersonalesComplete) {
-        this.error = 'Por favor, completa todos los datos.';
-      } else {
-        this.error = '';
-        this.empresa = {
-          nombre: '',
-          pais: ''
-        };
-        this.datosPersonales = {
-          nombre: '',
-          apellido: '',
-          dni: '',
-          telefonoCodigo: '',
-          telefonoNumero: '',
-          email: ''
-        };
-        this.showModal = true;
+    validateDNI() { // Permitir solo números y los caracteres ., -, /
+      const regex = /^[0-9./-]*$/;
+      
+      if (!regex.test(this.datosPersonales.dni)) { // Elimina caracteres no permitidos
+        this.datosPersonales.dni = this.datosPersonales.dni.replace(/[^0-9./-]/g, '');
       }
+    },
+    guardarDatos() {
+    const empresaEmpty = Object.values(this.empresa).some(value => value === '');
+    const datosPersonalesEmpty = Object.values(this.datosPersonales).some(value => value === '');
+    const empresaComplete = Object.values(this.empresa).every(value => value !== '');
+    const datosPersonalesComplete = Object.values(this.datosPersonales).every(value => value !== '');
+
+    const dni = this.datosPersonales.dni.replace(/[^0-9]/g, '');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const telefonoCodigo = this.datosPersonales.telefonoCodigo.toString();
+    const telefonoNumero = this.datosPersonales.telefonoNumero.toString();
+
+    if (empresaEmpty || datosPersonalesEmpty) {
+      this.error = 'Por favor, completa todos los campos.';
+    } else if (!empresaComplete || !datosPersonalesComplete) {
+      this.error = 'Por favor, completa todos los datos.';
+    } else if (dni.length < 6 || dni.length > 8) {
+      this.error = 'El DNI debe contener entre 6 y 8 números.';
+    } else if (telefonoCodigo.length < 3 || telefonoCodigo.length > 5) {
+      this.error = 'El código debe contener entre 3 y 5 caracteres.';
+    } else if (telefonoNumero.length < 8 || telefonoNumero.length > 12) {
+      this.error = 'El número debe contener entre 8 y 12 caracteres.';
+    } else if (!emailRegex.test(this.datosPersonales.email)) {
+      this.error = 'Por favor, ingresa un correo electrónico válido.';
+    } else {
+      this.error = '';
+      this.empresa = {
+        nombre: '',
+        pais: ''
+      };
+      this.datosPersonales = {
+        nombre: '',
+        apellido: '',
+        dni: '',
+        telefonoCodigo: '',
+        telefonoNumero: '',
+        email: ''
+      };
+      this.showModal = true;
     }
+  }
   }
 }
 </script>
