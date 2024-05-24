@@ -2,7 +2,10 @@
   <NavbarComponent :user="user" @logout="logout" />
 
   <main class="flex p-4 pt-0 lg:ml-56 bg-gray-100">
-    <div class="rounded-2xl w-full overflow-x-auto bg-white">
+    <div v-if="loading" class="flex justify-center items-center text-center mx-auto w-full h-full">
+      <i class="fas fa-spinner fa-spin text-4xl text-blue-500 text-center mx-auto"></i>
+    </div>
+    <div v-else class="rounded-2xl w-full overflow-x-auto bg-white">
       <table class="w-full">
         <thead>
           <tr class="border-b">
@@ -179,6 +182,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       showDropdown: false,
       showMessage: false,
       sidebarOpen: false,
@@ -281,6 +285,7 @@ export default {
       });
     },
     fetchTodasLasSolicitudes() { // TODO: acomodar para obtener en que pagina estamos
+      this.loading = true;
       const headers = {
         'Content-Type': 'application/json',
         'x-api-key': getCookie('token')
@@ -289,9 +294,11 @@ export default {
       axios.get('https://firmasxw.com/test/list?page=1', { headers })
         .then(response => {
           this.todasLasSolicitudes = response.data.splice(0, 10);
+          this.loading = false;
         })
         .catch(error => {
           console.error('Error al obtener todas las solicitudes:', error);
+          this.loading = false;
         });
     },
     beforeDestroy() {
