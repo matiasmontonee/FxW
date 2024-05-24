@@ -2,8 +2,8 @@
   <NavbarComponent :user="user" @logout="logout" />
 
   <main class="flex p-4 pt-0 lg:ml-56 bg-gray-100">
-    <div v-if="loading" class="flex justify-center items-center text-center mx-auto w-full h-full">
-      <i class="fas fa-spinner fa-spin text-4xl text-blue-500 text-center mx-auto"></i>
+    <div v-if="loading" class="flex justify-center w-full">
+      <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
     </div>
     <div v-else class="rounded-2xl w-full bg-white">
       <div class="m-6 mt-4">
