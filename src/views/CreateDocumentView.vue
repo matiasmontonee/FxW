@@ -6,13 +6,16 @@
       <!-- Barra de pasos -->
       <div class="flex justify-between items-center border-b mx-6 border-gray-300 px-20 py-3 text-sm">
         <div class="flex items-center">
-          <p :class="{ 'text-blue-500 font-semibold': currentStep === 1, 'text-gray-400': currentStep !== 1 }" class="text-blue-500">1. Cargar firmantes</p>
+          <p :class="{ 'text-blue-500 font-semibold': currentStep === 1, 'text-gray-400': currentStep !== 1 }"
+            class="text-blue-500">1. Cargar firmantes</p>
         </div>
         <div class="flex items-center">
-          <p :class="{ 'text-blue-500 font-semibold': currentStep === 2, 'text-gray-400': currentStep !== 2 }" class="text-blue-500">2. Cargar documento</p>
+          <p :class="{ 'text-blue-500 font-semibold': currentStep === 2, 'text-gray-400': currentStep !== 2 }"
+            class="text-blue-500">2. Cargar documento</p>
         </div>
         <div class="flex items-center">
-          <p :class="{ 'text-blue-500 font-semibold': currentStep === 3, 'text-gray-400': currentStep !== 3 }" class="text-blue-500">3. Enviar</p>
+          <p :class="{ 'text-blue-500 font-semibold': currentStep === 3, 'text-gray-400': currentStep !== 3 }"
+            class="text-blue-500">3. Enviar</p>
         </div>
       </div>
 
@@ -30,23 +33,34 @@
               </label>
             </div>
           </div> -->
-          <button class="text-gray-500 hover:text-gray-400 font-bold mr-6"> <i class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver</button>
-          <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i></button>
+          <button class="text-gray-500 hover:text-gray-400 font-bold mr-6"> <i
+              class="fas fa-arrow-left mr-2 text-white bg-gray-500 hover:bg-gray-400 rounded-full p-1"></i>Volver</button>
+          <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">Continuar<i
+              class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i></button>
         </div>
 
         <!-- MENSAJE DE ERROR -->
-        <div v-if="signerError" class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center flex justify-between items-center" style="width: 460px;">
+        <div v-if="signerError"
+          class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center flex justify-between items-center"
+          style="width: 460px;">
           <span class="ml-2 font-bold">{{ signerErrorMessage }}</span>
-          <button @click="signerError = false"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+          <button @click="signerError = false"><i
+              class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
         </div>
 
         <!-- Campos para los firmantes -->
         <div class="m-6">
           <div v-for="(signer, index) in signers" :key="index" class="mb-12">
             <div class="flex items-center">
-              <input type="text" v-model="signer.name" :placeholder="index === 0 ? 'Nombre firmante' : 'Nombre firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
-              <input type="text" v-model="signer.lastName" :placeholder="index === 0 ? 'Apellido firmante' : 'Apellido firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
-              <input @input="validateDNI(index)" type="text" v-model="signer.dni" :placeholder="index === 0 ? 'DNI / CI firmante' : 'DNI / CI firmante ' + (index + 1)" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
+              <input type="text" v-model="signer.name"
+                :placeholder="index === 0 ? 'Nombre firmante' : 'Nombre firmante ' + (index + 1)"
+                class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
+              <input type="text" v-model="signer.lastName"
+                :placeholder="index === 0 ? 'Apellido firmante' : 'Apellido firmante ' + (index + 1)"
+                class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-12">
+              <input @input="validateDNI(index)" type="text" v-model="signer.dni"
+                :placeholder="index === 0 ? 'DNI / CI firmante' : 'DNI / CI firmante ' + (index + 1)"
+                class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800">
             </div>
             <div class="flex items-center">
               <select v-model="signer.contact" class="p-2 mr-10 w-36 rounded border border-gray-300">
@@ -68,7 +82,8 @@
                   <option value="444">🇨🇷 +444</option>
                   <option value="555">🇧🇷 +555</option>
                 </select>
-                <input type="number" v-model="signer.phoneNumber" placeholder="Teléfono" class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 placeholder-gray-800">
+                <input type="number" v-model="signer.phoneNumber" placeholder="Teléfono"
+                  class="border-gray-300 border-b-2 w-56 focus:outline-none p-2 placeholder-gray-800">
               </template>
               <div v-show="signers.length > 1" class="flex flex-col">
                 <!-- <label class="inline-flex items-center ml-8">
@@ -88,10 +103,13 @@
             class="mb-12 text-red-500 bg-red-100 p-2 rounded-md text-center flex justify-between items-center"
             style="width: 460px;">
             <span class="ml-2 font-bold">{{ maxSignersErrorMessage }}</span>
-            <button @click="maxSignersError = false"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+            <button @click="maxSignersError = false"><i
+                class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
           </div>
 
-          <button @click="addSigner" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full"><i class="fas fa-search-plus mr-2"></i>Agregar firmante</button>
+          <button @click="addSigner"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full"><i
+              class="fas fa-search-plus mr-2"></i>Agregar firmante</button>
         </div>
       </div>
 
@@ -99,19 +117,25 @@
       <div v-if="currentStep === 2">
         <div class="flex items-center justify-between m-6" style="margin-top: 14px">
           <div class="flex items-center text-lg">
-            <input type="text" v-model="documentId" class="border-b border-gray-300 mr-4 placeholder-black focus:outline-none w-64" placeholder="Id / Nombre del documento">
+            <input type="text" v-model="documentId"
+              class="border-b border-gray-300 mr-4 placeholder-black focus:outline-none w-64"
+              placeholder="Id / Nombre del documento">
             <i class="fas fa-edit text-gray-400"></i>
           </div>
           <div class="flex items-center">
-            <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6"><i class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver</button>
-            <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">Continuar<i class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i></button>
+            <button @click="previousStep" class="text-blue-500 hover:text-blue-400 font-bold mr-6"><i
+                class="fas fa-arrow-left mr-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i>Volver</button>
+            <button @click="nextStep" class="text-blue-500 hover:text-blue-400 font-bold">Continuar<i
+                class="fas fa-arrow-right ml-2 text-white bg-blue-500 hover:bg-blue-400 rounded-full p-1"></i></button>
           </div>
         </div>
 
         <!-- Error para ID o nombre del documento -->
-        <div v-if="documentIdError" class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center text-blue-900 flex justify-between items-center w-96">
+        <div v-if="documentIdError"
+          class="m-6 mb-0 text-red-500 bg-red-100 p-2 rounded-md text-center text-blue-900 flex justify-between items-center w-96">
           <span class="ml-2 font-bold">{{ documentIdErrorMessage }}</span>
-          <button @click="removeErrorMessage('documentIdError')"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+          <button @click="removeErrorMessage('documentIdError')"><i
+              class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
         </div>
 
         <ul class="ml-6">
@@ -121,12 +145,16 @@
               <div class="relative mr-4">
                 <label class="inline-flex items-center mt-1 cursor-pointer">
                   <input type="checkbox" class="hidden" v-model="automaticPositionChecked" />
-                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: automaticPositionChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
-                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': automaticPositionChecked }"></div>
+                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1"
+                    :style="{ backgroundColor: automaticPositionChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
+                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1"
+                    :class="{ 'translate-x-full': automaticPositionChecked }"></div>
                 </label>
               </div>
-              <i @click="toggleInfo('automaticPosition')" class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
-              <div v-if="showInfoMessage === 'automaticPosition'" class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
+              <i @click="toggleInfo('automaticPosition')"
+                class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
+              <div v-if="showInfoMessage === 'automaticPosition'"
+                class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
                 <p>Activa esta opción para que el documento se posicione automáticamente.</p>
               </div>
             </div>
@@ -137,13 +165,18 @@
               <div class="relative mr-4">
                 <label class="inline-flex items-center mt-1 cursor-pointer">
                   <input type="checkbox" class="hidden" v-model="photoIdChecked" />
-                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1" :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
-                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1" :class="{ 'translate-x-full': photoIdChecked }"></div>
+                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1"
+                    :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
+                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1"
+                    :class="{ 'translate-x-full': photoIdChecked }"></div>
                 </label>
               </div>
-              <i @click="toggleInfo('photoId')" class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
-              <div v-if="showInfoMessage === 'photoId'" class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
-                <p>Requiere que el firmante proporcione una foto de su DNI o CI junto con una selfie para verificación.</p>
+              <i @click="toggleInfo('photoId')"
+                class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
+              <div v-if="showInfoMessage === 'photoId'"
+                class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
+                <p>Requiere que el firmante proporcione una foto de su DNI o CI junto con una selfie para verificación.
+                </p>
               </div>
             </div>
           </li>
@@ -155,8 +188,11 @@
             class="w-96 h-60 mx-auto flex flex-col items-center text-center px-4 py-6 hover:bg-blue-100 cursor-pointer border-4 border-blue-400 border-dashed">
             <i class="far fa-file text-gray-400 fa-4x mb-4"></i>
             <p class="text-gray-400 px-32">Arrastrar y soltar el documento aquí o:</p>
-            <button @click="openFileInput" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full mt-2"><i class="fas fa-search-plus mr-2"></i>Seleccionar archivo</button>
-            <input id="fileInput" type='file' accept=".pdf, .docx, .png, .jpg, .jpeg" class="hidden" @change="handleFileChange" multiple />
+            <button @click="openFileInput"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full mt-2"><i
+                class="fas fa-search-plus mr-2"></i>Seleccionar archivo</button>
+            <input id="fileInput" type='file' accept=".pdf, .docx, .png, .jpg, .jpeg" class="hidden"
+              @change="handleFileChange" multiple />
           </label>
         </div>
 
@@ -170,14 +206,17 @@
         <div v-if="errorMessage"
           class="m-6 text-red-500 bg-red-100 p-2 rounded-md text-center text-blue-900 flex justify-between items-center w-96">
           <span class="ml-2 font-bold">{{ errorMessage }}</span>
-          <button @click="removeErrorMessage('errorMessage')"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
+          <button @click="removeErrorMessage('errorMessage')"><i
+              class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-red-300 px-2 rounded-sm"></i></button>
         </div>
 
         <!-- MOSTRAR ARCHIVOS -->
         <div v-if="fileNames.length > 0" class="m-6 mt-2">
-          <div v-for="(name, index) in fileNames" :key="index" class="bg-blue-100 p-2 rounded-md text-center text-blue-900 mb-2 flex justify-between items-center w-96">
+          <div v-for="(name, index) in fileNames" :key="index"
+            class="bg-blue-100 p-2 rounded-md text-center text-blue-900 mb-2 flex justify-between items-center w-96">
             <span class="text-black ml-2">{{ index + 1 }}. {{ name }}</span>
-            <button @click="removeFile(index)"><i class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-blue-300 px-2 rounded-sm"></i></button>
+            <button @click="removeFile(index)"><i
+                class="fas fa-times text-lg cursor-pointer text-gray-800 hover:bg-blue-300 px-2 rounded-sm"></i></button>
           </div>
         </div>
       </div>
@@ -192,17 +231,28 @@
         <div class="m-6">
           <div v-for="(signer, index) in signersData" :key="'signer-' + index">
             <div class="flex items-center">
-              <input type="text" v-model="signer.name" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Nombre">
-              <input type="text" v-model="signer.lastName" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Apellido">
-              <input v-if="signer.method === 'wpp'" type="number" v-model="signer.phone" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Número">
-              <input v-else type="text" v-model="signer.email" class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56" placeholder="Correo">
+              <input type="text" v-model="signer.name"
+                class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
+                placeholder="Nombre">
+              <input type="text" v-model="signer.lastName"
+                class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
+                placeholder="Apellido">
+              <input v-if="signer.method === 'wpp'" type="number" v-model="signer.phone"
+                class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
+                placeholder="Número">
+              <input v-else type="text" v-model="signer.email"
+                class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
+                placeholder="Correo">
             </div>
 
             <div class="flex items-center justify-start mt-4 mb-8">
-              <a :href="todasLasSolicitudes.urls[index].link" target="_blank" class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">
+              <a :href="todasLasSolicitudes.urls[index].link" target="_blank"
+                class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">
                 {{ todasLasSolicitudes.urls[index].link }}
                 <span class="ml-10">
-                  <i v-if="!copiedLinks.includes(todasLasSolicitudes.urls[index].link)" @click.prevent="copyLink(todasLasSolicitudes.urls[index].link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                  <i v-if="!copiedLinks.includes(todasLasSolicitudes.urls[index].link)"
+                    @click.prevent="copyLink(todasLasSolicitudes.urls[index].link)"
+                    class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                   <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                 </span>
               </a>
@@ -211,8 +261,10 @@
                 <i v-else-if="signer.method === 'wpp'" class="fas fa-phone-alt text-xl mr-2 text-gray-500"></i>
                 <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
                 <p>Enviar automáticamente</p>
-                <i @click="toggleInfo('someInfoType')" class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
-                <div v-if="showInfoMessage" class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/5 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-4 mt-32">
+                <i @click="toggleInfo('someInfoType')"
+                  class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
+                <div v-if="showInfoMessage"
+                  class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/5 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-4 mt-32">
                   <p>Envía el mensaje automáticamente mediante el contacto seleccionado.</p>
                 </div>
               </div>
@@ -220,8 +272,9 @@
           </div>
 
           <div class="flex justify-center">
-            <button @click="updateData" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 font-bold rounded-full mr-4">
-                <i class="fas fa-pen mr-2"></i>Actualizar datos
+            <button @click="updateData"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-1 font-bold rounded-full mr-4">
+              <i class="fas fa-pen mr-2"></i>Actualizar datos
             </button>
             <router-link to="/requests?enviado=true">
               <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
@@ -235,7 +288,7 @@
   </main>
 
   <PopUpComponent :show="showPopUp" :message="PopUpMessage" />
-  <ModalPurchaseComponent v-if="showLimitExceededModal" />
+  <ModalPurchaseComponent v-if="showLimitExceededModal" :show="showLimitExceededModal" @close="hideModal" />
 </template>
 
 <script>
@@ -267,8 +320,8 @@ export default {
       maxSignersErrorMessage: 'Se ha alcanzado el límite máximo de firmantes (6).',
       documentSigned: false,
       documentId: '',
-      automaticPositionChecked: false,
-      photoIdChecked: false,
+      automaticPositionChecked: false, // TODO: @luis, agarra esta info para el crear doc
+      photoIdChecked: false, // TODO: @luis, agarra esta info para el crear doc
       showInfoMessage: null,
       copiedLinks: [],
       base64Doc: '',
@@ -290,7 +343,7 @@ export default {
     validateDNI(index) { // Permitir solo números y los caracteres ., -, /
       const regex = /^[0-9./-]*$/;
       const dni = this.signers[index].dni;
-      
+
       if (!regex.test(dni)) { // Elimina caracteres no permitidos
         this.signers[index].dni = dni.replace(/[^0-9./-]/g, '');
       }
@@ -338,35 +391,56 @@ export default {
       // Crear doc y mostrar popup
       if (this.currentStep === 2) {
         await this.createMission();
-        this.showPopUp = true;
-        setTimeout(() => {
-          this.showPopUp = false;
-        }, 5000);
       }
 
       // Si pasa todas las validaciones, avanzar al siguiente paso
-      this.errorMessage = '';
-      this.currentStep++;
+      if (!this.showLimitExceededModal) {
+        if (this.currentStep === 2) {
+          this.showPopUp = true;
+          setTimeout(() => {
+            this.showPopUp = false;
+          }, 5000);
+        }
+        this.errorMessage = '';
+        this.currentStep++;
+      }
     },
-    updateData() { // Datos actualizados de los input
+    async updateMission() {
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': getCookie('token')
+      };
+
+      const body = {
+        datos_firmantes: this.updatedSignersData,
+      };
+
+      try {
+        const response = await axios.post('https://firmasxw.com/test/modifySignatureRequest', body, { headers });
+        console.log('Respuesta de la solicitud:', response.data);
+        return response.data;
+      } catch (error) {
+        console.error('Error en la solicitud:', error);
+      }
+    },
+    async updateData() { // Datos actualizados de los input
       const updatedSignersData = this.signersData.map(signer => ({
-        name: signer.name,
-        lastName: signer.lastName,
-        dni: signer.dni,
-        email: signer.email,
-        phone: signer.phone,
-        method: signer.method
+        name: signer.name + ' ' + signer.lastName,
+        phone: signer.phone ?? signer.email
       }));
+
 
       // Mostrar popup
       this.PopUpMessage = 'Datos actualizados';
       this.showPopUp = true;
 
+      // await this.updateMission();
       setTimeout(() => {
         this.showPopUp = false;
       }, 5000);
 
       console.log('Datos actualizados:', updatedSignersData);
+      console.log('todas las solicitudes:', this.todasLasSolicitudes);
     },
     async createMission() {
       const headers = {
@@ -374,6 +448,7 @@ export default {
         'x-api-key': getCookie('token')
       };
 
+      // TODO: arreglar el client name
       const body = {
         datos_firmantes: this.signersData,
         id_custom_client: this.documentId ?? null,
@@ -391,6 +466,8 @@ export default {
         if (error.response && error.response.status === 429) {
           // Si la solicitud falla debido a "Demasiadas solicitudes", muestra la modal
           this.showLimitExceededModal = true;
+          console.log('showLimitExceededModal', this.showLimitExceededModal);
+          return this.showLimitExceededModal;
         } else {
           // Manejar otros errores de manera diferente, si es necesario
           console.error('Error en la solicitud:', error);
