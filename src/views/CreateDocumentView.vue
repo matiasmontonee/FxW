@@ -288,7 +288,7 @@
   </main>
 
   <PopUpComponent :show="showPopUp" :message="PopUpMessage" />
-  <ModalPurchaseComponent v-if="showLimitExceededModal" :show="showLimitExceededModal" @close="hideModal" />
+  <ModalPurchaseComponent v-if="showLimitExceededModal" :show="showLimitExceededModal" @close="showLimitExceededModal = false" />
 </template>
 
 <script>
@@ -439,7 +439,6 @@ export default {
         name: signer.name + ' ' + signer.lastName,
         phone: signer.phone ?? signer.email
       }));
-
 
       // Mostrar popup
       this.PopUpMessage = 'Datos actualizados';
