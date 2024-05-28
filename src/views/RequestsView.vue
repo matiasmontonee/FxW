@@ -194,7 +194,8 @@ export default {
       copiedLinks: [],
       searchTerm: '',
       showPopUp: false,
-      PopUpMessage: 'Documento Enviado'
+      PopUpMessage: 'Documento Enviado',
+      currentPage: 1,
     };
   },
   created() {
@@ -291,9 +292,9 @@ export default {
         'x-api-key': getCookie('token')
       };
 
-      axios.get('https://firmasxw.com/test/list?page=1', { headers })
+      axios.get(`https://firmasxw.com/test/list?page=${this.currentPage}`, { headers })
         .then(response => {
-          this.todasLasSolicitudes = response.data.splice(0, 10);
+          this.todasLasSolicitudes = response.data;
           this.loading = false;
         })
         .catch(error => {
