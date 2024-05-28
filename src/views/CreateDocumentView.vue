@@ -229,29 +229,26 @@
         </div> -->
 
         <div class="m-6">
-          <div v-for="(signer, index) in signersData" :key="'signer-' + index">
+          <div v-for="(signer, index) in todasLasSolicitudes.urls" :key="'signer-' + index">
             <div class="flex items-center">
               <input type="text" v-model="signer.name"
                 class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
                 placeholder="Nombre">
-              <input type="text" v-model="signer.lastName"
-                class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
-                placeholder="Apellido">
-              <input v-if="signer.method === 'wpp'" type="number" v-model="signer.phone"
+              <input v-if="signer.method === 'wpp'" type="number" v-model="signer.contact"
                 class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
                 placeholder="Número">
-              <input v-else type="text" v-model="signer.phone"
+              <input v-else type="text" v-model="signer.contact"
                 class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
                 placeholder="Correo">
             </div>
 
             <div class="flex items-center justify-start mt-4 mb-8">
-              <a :href="todasLasSolicitudes.urls[index].link" target="_blank"
+              <a :href="signer.link" target="_blank"
                 class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">
-                {{ todasLasSolicitudes.urls[index].link }}
+                {{ signer.link }}
                 <span class="ml-10">
-                  <i v-if="!copiedLinks.includes(todasLasSolicitudes.urls[index].link)"
-                    @click.prevent="copyLink(todasLasSolicitudes.urls[index].link)"
+                  <i v-if="!copiedLinks.includes(signer.link)"
+                    @click.prevent="copyLink(signer.link)"
                     class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                   <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                 </span>
@@ -375,8 +372,7 @@ export default {
 
       // Almacenar los datos de los firmantes en una propiedad del componente
       this.signersData = this.signers.map(signer => ({
-        name: signer.name,
-        lastName: signer.lastName,
+        name: signer.name + ' ' + signer.lastName,
         dni: signer.dni,
         email: signer.email,
         phone: `${signer.areaCode}${signer.phoneNumber}`,
@@ -391,7 +387,7 @@ export default {
           element.phone = element.email;
         }
       }
-      console.log('Datos de los firmantes:', this.signersData);
+      
 
       // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 2 && this.fileNames.length === 0) {
@@ -423,7 +419,7 @@ export default {
       };
 
       const body = {
-        datos_firmantes: this.updatedSignersData,
+        datos_firmantes: this.todasLasSolicitudes.urls,
       };
 
       try {
@@ -434,23 +430,16 @@ export default {
         console.error('Error en la solicitud:', error);
       }
     },
-    async updateData() { // Datos actualizados de los input
-      const updatedSignersData = this.signersData.map(signer => ({
-        name: signer.name + ' ' + signer.lastName,
-        phone: signer.phone ?? signer.email
-      }));
-
+    async updateData() { // Datos actualizados de los input    
       // Mostrar popup
       this.PopUpMessage = 'Datos actualizados';
       this.showPopUp = true;
 
-      // await this.updateMission();
+      await this.updateMission();
       setTimeout(() => {
         this.showPopUp = false;
       }, 5000);
 
-      console.log('Datos actualizados:', updatedSignersData);
-      console.log('todas las solicitudes:', this.todasLasSolicitudes);
     },
     async createMission() {
       const headers = {

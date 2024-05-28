@@ -305,11 +305,13 @@ export default {
     },
     changePage(pageNumber) {
       this.currentPage = pageNumber;
+      
       this.fetchTodasLasSolicitudes();
     },
     nextPage() {
       if (this.todasLasSolicitudes.length === 10) {
         this.currentPage += 1;
+        console.log(this.currentPage);
         this.fetchTodasLasSolicitudes();
       }
     },
