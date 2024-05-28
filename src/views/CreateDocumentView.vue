@@ -240,7 +240,7 @@
               <input v-if="signer.method === 'wpp'" type="number" v-model="signer.phone"
                 class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
                 placeholder="Número">
-              <input v-else type="text" v-model="signer.email"
+              <input v-else type="text" v-model="signer.phone"
                 class="border-b-2 border-gray-300 p-2 pl-0 mr-6 mb-6 placeholder-gray-800 focus:outline-none w-56"
                 placeholder="Correo">
             </div>
@@ -358,7 +358,8 @@ export default {
       if (this.currentStep === 1 && !this.documentSigned && this.signers.some(signer => {
         if (signer.contact === 'wpp') {
           return signer.name.trim() === '' || signer.lastName.trim() === '' || String(signer.dni).trim() === '' || String(signer.areaCode).trim() === '' || String(signer.phoneNumber).trim() === '' || signer.contact.trim() === '';
-        } else if (signer.contact === 'mail') {
+        } 
+        else if (signer.contact === 'mail') {
           // Verificar si el contacto es por correo electrónico y si el campo de correo electrónico está vacío
           return signer.name.trim() === '' || signer.lastName.trim() === '' || String(signer.dni).trim() === '' || (!signer.email || signer.email.trim() === '') || signer.contact.trim() === '';
         }
@@ -381,6 +382,16 @@ export default {
         phone: `${signer.areaCode}${signer.phoneNumber}`,
         method: signer.contact
       }));
+
+      // HOT FIX: pone el dato phone segun el metodo... ya que la api no acepta parametro de mail.. toma todo como uno 
+      for (let element of this.signersData) {
+        if (element.method === 'wpp') {
+          element.email = null;
+        } else {
+          element.phone = element.email;
+        }
+      }
+      console.log('Datos de los firmantes:', this.signersData);
 
       // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 2 && this.fileNames.length === 0) {
