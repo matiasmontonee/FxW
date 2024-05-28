@@ -1,29 +1,14 @@
 <template>
-  <div class="fixed z-10 inset-0 overflow-y-auto" v-if="show">
-    <div class="flex items-center justify-center min-h-screen px-4">
-      <div class="fixed inset-0 transition-opacity" @click="closeModal">
-        <div class="absolute inset-0 bg-gray-900 opacity-50"></div>
-      </div>
-      <div class="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-        <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-          <div class="sm:flex sm:items-start">
-            <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-              <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </div>
-            <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-              <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-headline">{{ title }}</h3>
-              <div class="mt-2">
-                <p class="text-sm text-gray-500">{{ message }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-          <button type="button" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Ir a la sección de compra</button>
-          <button @click="closeModal" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm">Cerrar</button>
-        </div>
+  <div v-if="show" class="fixed inset-0 flex items-center justify-center z-50">
+    <div class="fixed inset-0 bg-black opacity-50"></div>
+    <div class="relative bg-white p-6 rounded-lg shadow-lg w-1/3">
+      <h3 class="text-xl font-bold mb-4">No tienes crédito de firmas <i class="fas fa-times-circle text-red-500 ml-1"></i></h3>
+      <p class="mb-4">¡Comprá tu pack para no volver a firmar en papel!</p>
+      <div class="flex justify-end">
+        <router-link to="/purchase">
+          <button class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md mr-2">Comprar pack</button>
+        </router-link>
+        <button @click="close" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md">Cerrar</button>
       </div>
     </div>
   </div>
@@ -31,24 +16,11 @@
 
 <script>
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      required: true
-    },
-    title: {
-      type: String,
-      default: 'Error'
-    },
-    message: {
-      type: String,
-      default: 'Ha ocurrido un error.'
-    }
-  },
+  props: ['show'],
   methods: {
-    closeModal() {
+    close() {
       this.$emit('close');
     }
   }
-};
+}
 </script>
