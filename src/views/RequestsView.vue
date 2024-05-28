@@ -157,10 +157,11 @@
       </table>
 
       <div class="flex justify-center mx-auto text-xl py-2 my-6 w-1/5 rounded-md bg-blue-300 text-white">
-        <button><i class="fas fa-chevron-left hover:text-blue-500"></i></button>
-        <p class="mx-4">1</p>
-        <button><i class="fas fa-chevron-right hover:text-blue-500"></i></button>
-      </div>
+  <button @click="prevPage"><i class="fas fa-chevron-left hover:text-blue-500"></i></button>
+  <p class="mx-4">{{ currentPage }}</p>
+  <button @click="nextPage"><i class="fas fa-chevron-right hover:text-blue-500"></i></button>
+</div>
+
     </div>
   </main>
 
@@ -294,13 +295,29 @@ export default {
 
       axios.get(`https://firmasxw.com/test/list?page=${this.currentPage}`, { headers })
         .then(response => {
-          this.todasLasSolicitudes = response.data;
+          this.todasLasSolicitudes = response.data.splice(0, 10);
           this.loading = false;
         })
         .catch(error => {
           console.error('Error al obtener todas las solicitudes:', error);
           this.loading = false;
         });
+    },
+    changePage(pageNumber) {
+      this.currentPage = pageNumber;
+      this.fetchTodasLasSolicitudes();
+    },
+    nextPage() {
+      if (this.todasLasSolicitudes.length === 10) {
+        this.currentPage += 1;
+        this.fetchTodasLasSolicitudes();
+      }
+    },
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage -= 1;
+        this.fetchTodasLasSolicitudes();
+      }
     },
     beforeDestroy() {
       document.removeEventListener('click', this.closeDropdownOnClickOutside);
