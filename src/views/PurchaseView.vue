@@ -77,6 +77,7 @@
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
 import axios from 'axios';
+import { getCookie } from '../helpers/cookies';
 
 export default {
   emits: ['login', 'logout'],
@@ -97,8 +98,12 @@ export default {
       this.sidebarOpen = !this.sidebarOpen;
     },
     async handleClick(amount) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': getCookie('token')
+      };
       try {
-        const response = await axios.get(`https://firmasxw.com/test/generatePaiementDlocal?amount=${amount}`);
+        const response = await axios.get(`https://firmasxw.com/test/generatePaiementDlocal?amount=${amount}`, { headers });
         const redirectUrl = response.data.url;
         window.open(redirectUrl, '_blank');
       } catch (error) {
