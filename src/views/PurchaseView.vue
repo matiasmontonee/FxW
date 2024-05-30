@@ -98,7 +98,7 @@ export default {
     },
     async handleClick(amount) {
       try {
-        const response = await axios.get(`http://firmasxw.com/test/generatePaiementDlocal?amount=${amount}`);
+        const response = await axios.get(`https://firmasxw.com/test/generatePaiementDlocal?amount=${amount}`);
         const redirectUrl = response.data.url;
         window.open(redirectUrl, '_blank');
       } catch (error) {
