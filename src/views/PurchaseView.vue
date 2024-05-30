@@ -21,11 +21,14 @@
                 <li class="my-1">Plataforma centralizada de firmas</li>
               </ul>
             </div>
-            <button class="bg-green-400 hover:bg-green-500 py-2 px-6 my-8 font-semibold text-sm">COMPRAR</button>
+            <button class="bg-green-400 hover:bg-green-500 py-2 px-6 my-8 font-semibold text-sm"
+              @click="handleClick(20)">COMPRAR</button>
           </div>
         </div>
         <div class="w-1/4 px-1 text-center relative">
-          <div class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 py-1 px-3 rounded z-10 text-gray-100 text-sm" style="top: -0.3rem;">#máspopular</div>
+          <div
+            class="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500 py-1 px-3 rounded z-10 text-gray-100 text-sm"
+            style="top: -0.3rem;">#máspopular</div>
           <div class="px-4 border-2 border-green-400 flex flex-col items-center justify-between h-full">
             <div class="mt-6 flex-grow flex flex-col items-center">
               <h2 class="mt-4 font-semibold text-green-400">Salve un árbol</h2>
@@ -41,7 +44,8 @@
                 <li class="mt-1">Soporte online</li>
               </ul>
             </div>
-            <button class="bg-green-400 hover:bg-green-500 py-2 px-6 my-14 font-semibold text-sm">COMPRAR</button>
+            <button class="bg-green-400 hover:bg-green-500 py-2 px-6 my-14 font-semibold text-sm"
+              @click="handleClick(50)">COMPRAR</button>
           </div>
         </div>
         <div class="w-1/4 px-1 text-center my-6">
@@ -61,7 +65,8 @@
                 <li class="my-1">API de integración</li>
               </ul>
             </div>
-            <button class="bg-green-400 hover:bg-green-500 py-2 px-6 my-8 font-semibold text-sm">COMPRAR</button>
+            <button class="bg-green-400 hover:bg-green-500 py-2 px-6 my-8 font-semibold text-sm"
+              @click="handleClick(100)">COMPRAR</button>
           </div>
         </div>
       </div>
@@ -71,9 +76,10 @@
 
 <script>
 import NavbarComponent from '../components/NavbarComponent.vue';
+import axios from 'axios';
 
 export default {
-  emits: ['login','logout'],
+  emits: ['login', 'logout'],
   props: ['user'],
   components: {
     NavbarComponent
@@ -89,6 +95,15 @@ export default {
     },
     toggleSidebar() {
       this.sidebarOpen = !this.sidebarOpen;
+    },
+    async handleClick(amount) {
+      try {
+        const response = await axios.get(`http://firmasxw.com/test/generatePaiementDlocal?amount=${amount}`);
+        const redirectUrl = response.data.url;
+        window.open(redirectUrl, '_blank');
+      } catch (error) {
+        console.error('API call failed:', error);
+      }
     }
   }
 }
