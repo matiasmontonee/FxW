@@ -151,7 +151,7 @@
                     :class="{ 'translate-x-full': automaticPositionChecked }"></div>
                 </label>
               </div>
-              <i @click="toggleInfo('automaticPosition')"
+              <i @mouseover="showInfoMessage = 'automaticPosition'" @mouseleave="showInfoMessage = false"
                 class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
               <div v-if="showInfoMessage === 'automaticPosition'"
                 class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
@@ -171,7 +171,7 @@
                     :class="{ 'translate-x-full': photoIdChecked }"></div>
                 </label>
               </div>
-              <i @click="toggleInfo('photoId')"
+              <i @mouseover="showInfoMessage = 'photoId'" @mouseleave="showInfoMessage = false"
                 class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
               <div v-if="showInfoMessage === 'photoId'"
                 class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
@@ -247,8 +247,7 @@
                 class="bg-gray-200 p-2 rounded-xl text-blue-600 hover:text-blue-500 hover:underline text-lg mr-8">
                 {{ signer.link }}
                 <span class="ml-10">
-                  <i v-if="!copiedLinks.includes(signer.link)"
-                    @click.prevent="copyLink(signer.link)"
+                  <i v-if="!copiedLinks.includes(signer.link)" @click.prevent="copyLink(signer.link)"
                     class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                   <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                 </span>
@@ -258,7 +257,7 @@
                 <i v-else-if="signer.method === 'wpp'" class="fas fa-phone-alt text-xl mr-2 text-gray-500"></i>
                 <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
                 <p>Enviar automáticamente</p>
-                <i @click="toggleInfo('someInfoType')"
+                <i @mouseover="showInfoMessage = true" @mouseleave="showInfoMessage = false"
                   class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
                 <div v-if="showInfoMessage"
                   class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/5 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-4 mt-32">
@@ -285,7 +284,8 @@
   </main>
 
   <PopUpComponent :show="showPopUp" :message="PopUpMessage" />
-  <ModalPurchaseComponent v-if="showLimitExceededModal" :show="showLimitExceededModal" @close="showLimitExceededModal = false" />
+  <ModalPurchaseComponent v-if="showLimitExceededModal" :show="showLimitExceededModal"
+    @close="showLimitExceededModal = false" />
 </template>
 
 <script>
@@ -355,7 +355,7 @@ export default {
       if (this.currentStep === 1 && !this.documentSigned && this.signers.some(signer => {
         if (signer.contact === 'wpp') {
           return signer.name.trim() === '' || signer.lastName.trim() === '' || String(signer.dni).trim() === '' || String(signer.areaCode).trim() === '' || String(signer.phoneNumber).trim() === '' || signer.contact.trim() === '';
-        } 
+        }
         else if (signer.contact === 'mail') {
           // Verificar si el contacto es por correo electrónico y si el campo de correo electrónico está vacío
           return signer.name.trim() === '' || signer.lastName.trim() === '' || String(signer.dni).trim() === '' || (!signer.email || signer.email.trim() === '') || signer.contact.trim() === '';
@@ -387,7 +387,7 @@ export default {
           element.phone = element.email;
         }
       }
-      
+
 
       // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 2 && this.fileNames.length === 0) {
@@ -397,6 +397,7 @@ export default {
 
       // Crear doc y mostrar popup
       if (this.currentStep === 2) {
+        this.loading = true;
         await this.createMission();
       }
 

@@ -4,7 +4,7 @@
   <!-- SIDEBAR -->
   <aside v-if="sidebarOpen"
     class="bg-gray-800 text-gray-400 pt-4 h-full w-56 flex-shrink-0 absolute inset-y-0 left-0 transform transition-transform z-20"
-    :class="{ '-translate-x-full': !sidebarOpen }" style="height: calc(127vh);">
+    :class="{ '-translate-x-full': !sidebarOpen }" style="height: calc(100vh);">
     <div class="flex flex-col h-full px-2">
       <a href="">
         <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="mx-auto w-32 mt-4 mb-12">
@@ -41,15 +41,17 @@
         <i class="fas fa-cog mr-2 p-1"
           :class="{ 'text-blue-400 bg-white rounded-full': $route.path === '/profile' }"></i> Perfil
       </router-link>
-      <div class="mb-20 mx-2 border-t border-gray-300"></div>
-      <button class="text-left px-5 mb-4">
-        <i class="fas fa-user-circle mr-5"></i>
-        <span class="hover:text-gray-200" v-if="user">{{ user.name }}</span>
-      </button>
-      <button @click="logout" class="text-left px-5 text-lg">
-        <i class="fas fa-sign-out-alt mr-4"></i>
-        <span class="hover:text-gray-200">Cerrar sesión</span>
-      </button>
+      <div class="mt-auto mb-4">
+        <div class="mb-10 mx-2 border-t border-gray-300"></div>
+        <button class="text-left px-5 mb-4">
+          <i class="fas fa-user-circle mr-5"></i>
+          <span class="hover:text-gray-200" v-if="user">{{ user.name }}</span>
+        </button>
+        <button @click="logout" class="text-left px-5 text-lg">
+          <i class="fas fa-sign-out-alt mr-4"></i>
+          <span class="hover:text-gray-200">Cerrar sesión</span>
+        </button>
+      </div>
     </div>
   </aside>
 
@@ -80,14 +82,16 @@
         <button @click="toggleSidebar" class="block lg:hidden rounded"><i class="fas fa-bars text-2xl"></i></button>
         <div class="flex items-center">
           <router-link to="/newdocument">
-            <button class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear documento</button>
+            <button class="bg-blue-600 hover:bg-blue-800 text-white font-semibold py-1 px-6 rounded-xl mr-4">Crear
+              documento</button>
           </router-link>
           <div class="items-center py-1 px-2 rounded-xl cursor-pointer" @click="toggleDropdown">
             <i class="fas fa-user text-2xl"></i>
           </div>
           <div v-show="showDropdown" class="lg:hidden absolute right-5 mt-52 w-64 bg-white rounded-md shadow-2xl z-10">
             <ul>
-              <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture" alt="User" class="rounded-full h-5 w-4.5 mr-2">
+              <li class="flex items-center bg-gray-200 p-2 mb-1 rounded-t-md"><img v-if="user" :src="user.picture"
+                  alt="User" class="rounded-full h-5 w-4.5 mr-2">
                 <span v-if="user && user.name">{{ user.name.split(' ')[0] }}</span>
               </li>
               <li>

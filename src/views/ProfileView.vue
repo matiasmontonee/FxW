@@ -5,7 +5,7 @@
     <div v-if="loading" class="flex justify-center w-full">
       <i class="fas fa-spinner fa-spin text-4xl text-blue-500"></i>
     </div>
-    <div v-else class="rounded-2xl w-full bg-white">
+    <div v-else class="rounded-2xl w-full bg-white" style="flex:1; height: calc(85vh); width: calc(100vh)">
       <div class="m-6 mt-4">
         <h2 class="text-blue-500 font-bold mb-2">Datos Empresa</h2>
 
@@ -13,10 +13,10 @@
           <div class="flex items-center">
             <input type="text" placeholder="Nombre" v-model="datosPersonales.client_business_name"
               class="border-gray-300 border-b-2 w-2/5 focus:outline-none p-2 pl-0 mb-6 placeholder-gray-800 mr-4">
-            <i @click="toggleInfo"
+            <i @mouseover="showInfoMessage = true" @mouseleave="showInfoMessage = false"
               class="fas fa-info-circle text-xl mb-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
             <div v-if="showInfoMessage"
-              class="absolute bg-gray-200 rounded-lg text-sm py-4 px-8 w-1/3 top-1/5 right-1/2 left-1/2 text-gray-700 shadow-lg z-10 ml-20">
+              class="absolute bg-gray-200 rounded-lg text-sm py-4 px-4 w-1/3 top-1/5 right-1/2 left-1/2 text-gray-700 shadow-lg z-10 ml-20">
               <p>Es el nombre con el cual los firmantes identifican a su empresa. Lo verán de la siguiente manera:</p>
               <br />
               <p>¡Hola Darío! Soy Firmi, asistente virtual de Firma X WhatsApp. <span

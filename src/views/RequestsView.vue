@@ -5,38 +5,50 @@
     <div v-if="loading" class="flex justify-center items-center text-center mx-auto w-full h-full">
       <i class="fas fa-spinner fa-spin text-4xl text-blue-500 text-center mx-auto"></i>
     </div>
-    <div v-else class="rounded-2xl w-full overflow-x-auto bg-white">
+    <div v-else class="rounded-2xl w-full overflow-x-auto bg-white"
+      style="flex:1; height: calc(85vh); width: calc(100vh)">
       <table class="w-full">
         <thead>
           <tr class="border-b">
-            <th class="pl-6 pt-5 pb-3 text-left text-sm">
+            <!-- Buscador ID -->
+            <th class="w-1/5 pl-6 pt-5 pb-3 text-left text-sm">
               <div class="flex items-center">
                 <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
-                <input type="text" v-model="searchTerm" @input="searchDocuments" class="text-gray-400 focus:outline-none" placeholder="Id Documento" />
+                <input type="text" v-model="searchTerm" @input="searchDocuments"
+                  class="text-gray-400 focus:outline-none" placeholder="Id Documento" />
               </div>
             </th>
-            <th class="pr-10 pt-5 pb-3 text-left text-sm">
+            <th class="w-1/5 pr-10 pt-5 pb-3 text-left text-sm">
               <p class="text-gray-400">Firmantes</p>
             </th>
-            <th class="pt-5 pb-3 text-left text-sm">
+            <!-- Buscador fecha -->
+            <th class="w-1/5 pt-5 pb-3 text-left text-sm">
               <div class="flex items-center">
                 <i class="fas fa-search mr-2 text-blue-400 cursor-pointer"></i>
-                <input type="date" v-model="searchDate" @input="searchDocuments" class="text-gray-400 focus:outline-none" placeholder="Fecha de Creación" />
+                <input type="date" v-model="searchDate" @input="searchDocuments"
+                  class="text-gray-400 focus:outline-none" placeholder="Fecha de Creación" />
               </div>
             </th>
-            <th class="pr-20 pt-5 pb-3 text-left text-sm relative" ref="dropdownContainer">
+            <!-- Buscador estado -->
+            <th class="w-1/5 pr-20 pt-5 pb-3 text-left text-sm relative" ref="dropdownContainer">
               <div class="flex items-center">
                 <i class="fas fa-chevron-down mr-2 text-blue-400 cursor-pointer" @click="toggleDropdown"></i>
                 <div class="relative">
                   <button class="text-gray-400 focus:outline-none" @click="toggleDropdown">Estado</button>
                   <ul v-if="showDropdown" class="absolute top-full bg-white border border-gray-300 shadow-md ">
-                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100">Firmado</li>
-                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100">Pendiente</li>
+                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click="setSearchStatus('Firmado')">Firmado
+                    </li>
+                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click="setSearchStatus('Pendiente')">
+                      Pendiente
+                    </li>
+                    <li class="cursor-pointer px-4 py-2 hover:bg-gray-100" @click="setSearchStatus('Todos')">
+                      Todos
+                    </li>
                   </ul>
                 </div>
               </div>
             </th>
-            <th class="pr-10 pt-5 pb-3 text-left text-sm">
+            <th class="w-1/5 pr-10 pt-5 pb-3 text-left text-sm">
               <p class="text-gray-400">Informe</p>
             </th>
           </tr>
@@ -47,48 +59,67 @@
               <div>
                 <div @click="toggleRow(index)" class="flex items-end cursor-pointer">
                   {{ solicitud.id_custom_client }}.pdf
-                  <i class="fas fa-chevron-down text-blue-400 ml-2 mb-0.5" :class="{ 'transform rotate-180': isRowExpanded(index) }"></i>
+                  <i class="fas fa-chevron-down text-blue-400 ml-2 mb-0.5"
+                    :class="{ 'transform rotate-180': isRowExpanded(index) }"></i>
                 </div>
                 <div class="flex overflow-x-auto">
                   <div class="flex flex-col">
                     <!-- ONE -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 0">
                       <span>
-                        <i class="fas fa-circle mr-2 mt-4" :class="{ 'text-green-400': solicitud.firmantes[0]?.signed, 'text-gray-400': !solicitud.firmantes[0]?.signed }"></i>
+                        <i class="fas fa-circle mr-2 mt-4"
+                          :class="{ 'text-green-400': solicitud.firmantes[0]?.signed, 'text-gray-400': !solicitud.firmantes[0]?.signed }"></i>
                         {{ solicitud.firmantes[0]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
-                        <a :href="solicitud.firmantes[0]?.link" target="_blank" class="hover:text-blue-400 underline">{{solicitud.firmantes[0]?.link }}</a>
-                        <i v-if="!copiedLinks.includes(solicitud.firmantes[0]?.link)" @click="copyLink(solicitud.firmantes[0]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                        <a :href="solicitud.firmantes[0]?.link" target="_blank" class="hover:text-blue-400 underline">{{
+                          solicitud.firmantes[0]?.link }}</a>
+                        <i v-if="!copiedLinks.includes(solicitud.firmantes[0]?.link)"
+                          @click="copyLink(solicitud.firmantes[0]?.link)"
+                          class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
-                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[0]?.method }} <span class="ml-4">{{ isNaN(solicitud.firmantes[0]?.phone.charAt(0)) ? solicitud.firmantes[0]?.phone : '+' + solicitud.firmantes[0]?.phone ?? solicitud.firmantes[0]?.email}}</span></p>
+                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[0]?.method }} <span class="ml-4">{{
+                          isNaN(solicitud.firmantes[0]?.phone.charAt(0)) ? solicitud.firmantes[0]?.phone : '+' +
+                          solicitud.firmantes[0]?.phone ?? solicitud.firmantes[0]?.email }}</span></p>
                     </div>
                     <!-- TWO -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 1">
                       <span>
-                        <i class="fas fa-circle mr-2" :class="{ 'text-green-400': solicitud.firmantes[1]?.signed, 'text-gray-400': !solicitud.firmantes[1]?.signed }"></i>
+                        <i class="fas fa-circle mr-2"
+                          :class="{ 'text-green-400': solicitud.firmantes[1]?.signed, 'text-gray-400': !solicitud.firmantes[1]?.signed }"></i>
                         {{ solicitud.firmantes[1]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
-                        <a :href="solicitud.firmantes[1]?.link" target="_blank" class="hover:text-blue-400 underline">{{solicitud.firmantes[1]?.link }}</a>
-                        <i v-if="!copiedLinks.includes(solicitud.firmantes[1]?.link)" @click="copyLink(solicitud.firmantes[1]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                        <a :href="solicitud.firmantes[1]?.link" target="_blank" class="hover:text-blue-400 underline">{{
+                          solicitud.firmantes[1]?.link }}</a>
+                        <i v-if="!copiedLinks.includes(solicitud.firmantes[1]?.link)"
+                          @click="copyLink(solicitud.firmantes[1]?.link)"
+                          class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
-                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[1]?.method }} <span class="ml-4">{{ isNaN(solicitud.firmantes[1]?.phone.charAt(0)) ? solicitud.firmantes[1]?.phone : '+' + solicitud.firmantes[1]?.phone ?? solicitud.firmantes[1]?.email}}</span></p>
+                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[1]?.method }} <span class="ml-4">{{
+                          isNaN(solicitud.firmantes[1]?.phone.charAt(0)) ? solicitud.firmantes[1]?.phone : '+' +
+                          solicitud.firmantes[1]?.phone ?? solicitud.firmantes[1]?.email }}</span></p>
                     </div>
                     <!-- THREE -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 2">
                       <span>
-                        <i class="fas fa-circle mr-2" :class="{ 'text-green-400': solicitud.firmantes[2]?.signed, 'text-gray-400': !solicitud.firmantes[2]?.signed }"></i>
+                        <i class="fas fa-circle mr-2"
+                          :class="{ 'text-green-400': solicitud.firmantes[2]?.signed, 'text-gray-400': !solicitud.firmantes[2]?.signed }"></i>
                         {{ solicitud.firmantes[2]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
-                        <a :href="solicitud.firmantes[2]?.link" target="_blank" class="hover:text-blue-400 underline">{{solicitud.firmantes[2]?.link }}</a>
-                        <i v-if="!copiedLinks.includes(solicitud.firmantes[2]?.link)" @click="copyLink(solicitud.firmantes[2]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                        <a :href="solicitud.firmantes[2]?.link" target="_blank" class="hover:text-blue-400 underline">{{
+                          solicitud.firmantes[2]?.link }}</a>
+                        <i v-if="!copiedLinks.includes(solicitud.firmantes[2]?.link)"
+                          @click="copyLink(solicitud.firmantes[2]?.link)"
+                          class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
-                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[2]?.method }} <span class="ml-4">{{ isNaN(solicitud.firmantes[2]?.phone.charAt(0)) ? solicitud.firmantes[2]?.phone : '+' + solicitud.firmantes[2]?.phone ?? solicitud.firmantes[2]?.email}}</span></p>
+                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[2]?.method }} <span class="ml-4">{{
+                          isNaN(solicitud.firmantes[2]?.phone.charAt(0)) ? solicitud.firmantes[2]?.phone : '+' +
+                          solicitud.firmantes[2]?.phone ?? solicitud.firmantes[2]?.email }}</span></p>
                     </div>
                   </div>
 
@@ -96,41 +127,59 @@
                     <!-- FOUR -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 3">
                       <span>
-                        <i class="fas fa-circle mr-2 mt-4" :class="{ 'text-green-400': solicitud.firmantes[3]?.signed, 'text-gray-400': !solicitud.firmantes[3]?.signed }"></i>
+                        <i class="fas fa-circle mr-2 mt-4"
+                          :class="{ 'text-green-400': solicitud.firmantes[3]?.signed, 'text-gray-400': !solicitud.firmantes[3]?.signed }"></i>
                         {{ solicitud.firmantes[3]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
-                        <a :href="solicitud.firmantes[3]?.link" target="_blank" class="hover:text-blue-400 underline">{{solicitud.firmantes[3]?.link }}</a>
-                        <i v-if="!copiedLinks.includes(solicitud.firmantes[3]?.link)" @click="copyLink(solicitud.firmantes[3]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                        <a :href="solicitud.firmantes[3]?.link" target="_blank" class="hover:text-blue-400 underline">{{
+                          solicitud.firmantes[3]?.link }}</a>
+                        <i v-if="!copiedLinks.includes(solicitud.firmantes[3]?.link)"
+                          @click="copyLink(solicitud.firmantes[3]?.link)"
+                          class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
-                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[3]?.method }} <span class="ml-4">{{ isNaN(solicitud.firmantes[3]?.phone.charAt(0)) ? solicitud.firmantes[3]?.phone : '+' + solicitud.firmantes[3]?.phone ?? solicitud.firmantes[3]?.email}}</span></p>
+                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[3]?.method }} <span class="ml-4">{{
+                          isNaN(solicitud.firmantes[3]?.phone.charAt(0)) ? solicitud.firmantes[3]?.phone : '+' +
+                          solicitud.firmantes[3]?.phone ?? solicitud.firmantes[3]?.email }}</span></p>
                     </div>
                     <!-- FIVE -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 4">
                       <span>
-                        <i class="fas fa-circle mr-2" :class="{ 'text-green-400': solicitud.firmantes[4]?.signed, 'text-gray-400': !solicitud.firmantes[4]?.signed }"></i>
+                        <i class="fas fa-circle mr-2"
+                          :class="{ 'text-green-400': solicitud.firmantes[4]?.signed, 'text-gray-400': !solicitud.firmantes[4]?.signed }"></i>
                         {{ solicitud.firmantes[4]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
-                        <a :href="solicitud.firmantes[4]?.link" target="_blank" class="hover:text-blue-400 underline">{{solicitud.firmantes[4]?.link }}</a>
-                        <i v-if="!copiedLinks.includes(solicitud.firmantes[4]?.link)" @click="copyLink(solicitud.firmantes[4]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                        <a :href="solicitud.firmantes[4]?.link" target="_blank" class="hover:text-blue-400 underline">{{
+                          solicitud.firmantes[4]?.link }}</a>
+                        <i v-if="!copiedLinks.includes(solicitud.firmantes[4]?.link)"
+                          @click="copyLink(solicitud.firmantes[4]?.link)"
+                          class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
-                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[4]?.method }} <span class="ml-4">{{ isNaN(solicitud.firmantes[4]?.phone.charAt(0)) ? solicitud.firmantes[4]?.phone : '+' + solicitud.firmantes[4]?.phone ?? solicitud.firmantes[4]?.email}}</span></p>
+                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[4]?.method }} <span class="ml-4">{{
+                          isNaN(solicitud.firmantes[4]?.phone.charAt(0)) ? solicitud.firmantes[4]?.phone : '+' +
+                          solicitud.firmantes[4]?.phone ?? solicitud.firmantes[4]?.email }}</span></p>
                     </div>
                     <!-- SIX -->
                     <div v-show="isRowExpanded(index) && solicitud.firmantes.length > 5">
                       <span>
-                        <i class="fas fa-circle mr-2" :class="{ 'text-green-400': solicitud.firmantes[5]?.signed, 'text-gray-400': !solicitud.firmantes[5]?.signed }"></i>
+                        <i class="fas fa-circle mr-2"
+                          :class="{ 'text-green-400': solicitud.firmantes[5]?.signed, 'text-gray-400': !solicitud.firmantes[5]?.signed }"></i>
                         {{ solicitud.firmantes[5]?.name }}
                       </span>
                       <div class="flex items-center mt-1 ml-6">
-                        <a :href="solicitud.firmantes[5]?.link" target="_blank" class="hover:text-blue-400 underline">{{solicitud.firmantes[5]?.link }}</a>
-                        <i v-if="!copiedLinks.includes(solicitud.firmantes[5]?.link)" @click="copyLink(solicitud.firmantes[5]?.link)" class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
+                        <a :href="solicitud.firmantes[5]?.link" target="_blank" class="hover:text-blue-400 underline">{{
+                          solicitud.firmantes[5]?.link }}</a>
+                        <i v-if="!copiedLinks.includes(solicitud.firmantes[5]?.link)"
+                          @click="copyLink(solicitud.firmantes[5]?.link)"
+                          class="fas fa-clone ml-2 mr-1 text-blue-400 hover:text-blue-300 cursor-pointer"></i>
                         <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                       </div>
-                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[5]?.method }} <span class="ml-4">{{ isNaN(solicitud.firmantes[5]?.phone.charAt(0)) ? solicitud.firmantes[5]?.phone : '+' + solicitud.firmantes[5]?.phone ?? solicitud.firmantes[5]?.email}}</span></p>
+                      <p class="mt-1 ml-6 mb-2">{{ solicitud.firmantes[5]?.method }} <span class="ml-4">{{
+                          isNaN(solicitud.firmantes[5]?.phone.charAt(0)) ? solicitud.firmantes[5]?.phone : '+' +
+                          solicitud.firmantes[5]?.phone ?? solicitud.firmantes[5]?.email }}</span></p>
                     </div>
                   </div>
                 </div>
@@ -143,7 +192,8 @@
               {{ formatDate(solicitud.created_at) }}
             </td>
             <td class="pt-2 text-sm " style="vertical-align: top;">
-              <p :class="{ 'bg-green-400': solicitud.is_finished, 'bg-gray-400': !solicitud.is_finished }" class="text-white font-semibold px-0 py-0.5 rounded-xl mr-4 w-20 text-center">
+              <p :class="{ 'bg-green-400': solicitud.is_finished, 'bg-gray-400': !solicitud.is_finished }"
+                class="text-white font-semibold px-0 py-0.5 rounded-xl mr-4 w-20 text-center">
                 {{ solicitud.is_finished ? 'Firmado' : 'Pendiente' }}
               </p>
             </td>
@@ -157,10 +207,10 @@
       </table>
 
       <div class="flex justify-center mx-auto text-xl py-2 my-6 w-1/5 rounded-md bg-blue-300 text-white">
-  <button @click="prevPage"><i class="fas fa-chevron-left hover:text-blue-500"></i></button>
-  <p class="mx-4">{{ currentPage }}</p>
-  <button @click="nextPage"><i class="fas fa-chevron-right hover:text-blue-500"></i></button>
-</div>
+        <button @click="prevPage"><i class="fas fa-chevron-left hover:text-blue-500"></i></button>
+        <p class="mx-4">{{ currentPage }}</p>
+        <button @click="nextPage"><i class="fas fa-chevron-right hover:text-blue-500"></i></button>
+      </div>
 
     </div>
   </main>
@@ -191,9 +241,12 @@ export default {
       documentoStatus: null,
       solicitudesGrupo: [],
       todasLasSolicitudes: [],
+      todasLasSolicitudesOriginal: [],
+      searchDate: '',
+      searchTerm: '',
+      searchStatus: '',
       expandedRows: [],
       copiedLinks: [],
-      searchTerm: '',
       showPopUp: false,
       PopUpMessage: 'Documento Enviado',
       currentPage: 1,
@@ -224,7 +277,7 @@ export default {
       }
     },
     closeDropdownOnClickOutside(event) {
-      if (!this.$refs.dropdownContainer.contains(event.target)) {
+      if (this.$refs.dropdownContainer && !this.$refs.dropdownContainer.contains(event.target)) {
         this.showDropdown = false;
       }
     },
@@ -264,26 +317,37 @@ export default {
       const day = date.getDate().toString().padStart(2, '0');
       const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
       const year = date.getFullYear();
-      return `${day}/${month}/${year}`;
+      return `${year}-${month}-${day}`;
+    },
+    setSearchStatus(status) {
+      this.searchStatus = status === 'Firmado';
+      if (status === 'Todos') {
+        this.searchStatus = '';
+      }
+      this.showDropdown = false;
+      this.searchDocuments();
     },
     searchDocuments() {
       const searchTerm = this.searchTerm.trim().toLowerCase();
       const searchDate = this.searchDate;
+      const searchStatus = this.searchStatus;
 
-      // Guardar una copia de todas las solicitudes originales
-      const todasLasSolicitudesOriginal = [...this.todasLasSolicitudes];
+      const todasLasSolicitudesOriginal = [...this.todasLasSolicitudesOriginal];
 
       // Si tanto el término de búsqueda como la fecha de búsqueda están vacíos, mostrar todas las solicitudes
-      if (!searchTerm && !searchDate) {
-        this.todasLasSolicitudes = todasLasSolicitudesOriginal;
+      if (!searchTerm && !searchDate && searchStatus === '') {
+        this.todasLasSolicitudes = [...this.todasLasSolicitudesOriginal];
         return;
       }
+
+      
 
       // Filtrar las solicitudes por ID de documento y fecha de creación
       this.todasLasSolicitudes = todasLasSolicitudesOriginal.filter(solicitud => {
         const matchesSearchTerm = !searchTerm || solicitud.id_custom_client.toString().toLowerCase().includes(searchTerm);
         const matchesSearchDate = !searchDate || this.formatDate(solicitud.created_at) === searchDate;
-        return matchesSearchTerm && matchesSearchDate;
+        const matchesSearchStatus = searchStatus === '' || solicitud.is_finished === searchStatus;
+        return matchesSearchTerm && matchesSearchDate && matchesSearchStatus;
       });
     },
     fetchTodasLasSolicitudes() { // TODO: acomodar para obtener en que pagina estamos
@@ -296,6 +360,7 @@ export default {
       axios.get(`https://firmasxw.com/test/list?page=${this.currentPage}`, { headers })
         .then(response => {
           this.todasLasSolicitudes = response.data.splice(0, 10);
+          this.todasLasSolicitudesOriginal = this.todasLasSolicitudes;
           this.loading = false;
         })
         .catch(error => {
@@ -305,7 +370,7 @@ export default {
     },
     changePage(pageNumber) {
       this.currentPage = pageNumber;
-      
+
       this.fetchTodasLasSolicitudes();
     },
     nextPage() {
