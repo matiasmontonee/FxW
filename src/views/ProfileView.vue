@@ -17,11 +17,11 @@
               class="fas fa-info-circle text-xl mb-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
             <div v-if="showInfoMessage"
               class="absolute bg-gray-200 rounded-lg text-sm py-4 px-4 w-1/3 top-1/5 right-1/2 left-1/2 text-gray-700 shadow-lg z-10 ml-20">
-              <p>Es el nombre con el cual los firmantes identifican a su empresa. Lo verán de la siguiente manera:</p>
-              <br />
-              <p>¡Hola Darío! Soy Firmi, asistente virtual de Firma X WhatsApp. <span
-                  class="font-bold text-red-700">Crecer SA</span> nos pidió hacerle llegar un documento para que lo
-                firme.</p>
+              <p>Es el nombre con el cual los firmantes identifican a su empresa.</p>
+              <p>Lo verán de la siguiente manera:</p>
+              <p>¡Hola Darío! Soy FirmIA, asistente virtual de FirmaXW. <span class="font-bold text-red-700">Crecer
+                  SA</span> nos pidió hacerle llegar el siguiente documento para que lo firme.
+              </p>
             </div>
           </div>
         </div>

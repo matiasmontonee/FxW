@@ -154,29 +154,11 @@
               <i @mouseover="showInfoMessage = 'automaticPosition'" @mouseleave="showInfoMessage = false"
                 class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
               <div v-if="showInfoMessage === 'automaticPosition'"
-                class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
-                <p>Activa esta opción para que el documento se posicione automáticamente.</p>
-              </div>
-            </div>
-          </li>
-          <li class="mb-2 text-gray-500 flex items-center justify-between w-80">
-            <span>Pedir foto de DNI/CI + foto Selfie</span>
-            <div class="flex items-center">
-              <div class="relative mr-4">
-                <label class="inline-flex items-center mt-1 cursor-pointer">
-                  <input type="checkbox" class="hidden" v-model="photoIdChecked" />
-                  <div class="w-10 h-3 bg-gray-300 rounded-full mt-1"
-                    :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
-                  <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1"
-                    :class="{ 'translate-x-full': photoIdChecked }"></div>
-                </label>
-              </div>
-              <i @mouseover="showInfoMessage = 'photoId'" @mouseleave="showInfoMessage = false"
-                class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
-              <div v-if="showInfoMessage === 'photoId'"
-                class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
-                <p>Requiere que el firmante proporcione una foto de su DNI o CI junto con una selfie para verificación.
-                </p>
+                class="absolute bg-gray-200 rounded-lg text-sm py-3 px-3 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
+                <p>Al seleccionar esta opción, las firmas se posicionarán automáticamente al pie de la última página.
+                  De lo contrario, el firmante deberá elegir la posición de su firma durante el proceso. Sí desea fijar
+                  una
+                  posición en particular comunicarse con soporte@firmaxw.com</p>
               </div>
             </div>
           </li>
@@ -252,11 +234,36 @@
                   <i v-else class="fas fa-check-circle ml-2 mr-1 text-green-400"></i>
                 </span>
               </a>
+            </div>
+
+
+            <div class="flex items-center justify-start mt-4 mb-8">
+              <span>Pedir foto de DNI/CI + foto Selfie</span>
               <div class="flex items-center">
+                <div class="relative mr-4">
+                  <label class="inline-flex items-center mt-1 cursor-pointer">
+                    <input type="checkbox" class="hidden" v-model="photoIdChecked" />
+                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1"
+                      :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
+                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1"
+                      :class="{ 'translate-x-full': photoIdChecked }"></div>
+                  </label>
+                </div>
+                <i @mouseover="showInfoMessage = 'photoId'" @mouseleave="showInfoMessage = false"
+                  class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
+                <div v-if="showInfoMessage === 'photoId'"
+                  class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
+                  <p>Requiere que el firmante proporcione una foto de su DNI o CI junto con una selfie para
+                    verificación.
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex ml-16 items-center">
                 <i v-if="signer.method === 'mail'" class="fas fa-envelope text-xl mr-2 text-gray-500"></i>
                 <i v-else-if="signer.method === 'wpp'" class="fas fa-phone-alt text-xl mr-2 text-gray-500"></i>
-                <input type="checkbox" class="mr-2 mb-0.5 ml-0.5 cursor-pointer h-4 w-4">
-                <p>Enviar automáticamente</p>
+                <input type="checkbox" class="mr-2 ml-0.5 cursor-pointer h-4 w-4">
+                <p>Enviar con FirmIA</p>
                 <i @mouseover="showInfoMessage = true" @mouseleave="showInfoMessage = false"
                   class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
                 <div v-if="showInfoMessage"
@@ -265,6 +272,7 @@
                 </div>
               </div>
             </div>
+
           </div>
 
           <div class="flex justify-center">
@@ -305,7 +313,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 1,
+      currentStep: 2,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -351,6 +359,7 @@ export default {
       }
     },
     async nextStep() {
+      console.log('currentStep:', this.currentStep);
       // Verificar si todos los campos del firmante están completos o el checkbox tildado
       if (this.currentStep === 1 && !this.documentSigned && this.signers.some(signer => {
         if (signer.contact === 'wpp') {
@@ -358,7 +367,7 @@ export default {
         }
         else if (signer.contact === 'mail') {
           // Verificar si el contacto es por correo electrónico y si el campo de correo electrónico está vacío
-          return signer.name.trim() === '' || signer.lastName.trim() === '' || String(signer.dni).trim() === '' || (!signer.email || signer.email.trim() === '') || signer.contact.trim() === '';
+          return signer.name.trim() === '' || signer.lastName.trim() === '' || String(signer.dni).trim() === '' || (!signer.email || signer.email.trim() === '' || !signer.email.includes('@')) || signer.contact.trim() === '';
         }
       })) {
         this.signerError = true;
@@ -388,12 +397,12 @@ export default {
         }
       }
 
-
+      //TODO: uncomment
       // Verificar si no se ha seleccionado ningún documento
-      if (this.currentStep === 2 && this.fileNames.length === 0) {
-        this.errorMessage = 'Seleccione un documento.';
-        return;
-      }
+      // if (this.currentStep === 2 && this.fileNames.length === 0) {
+      //   this.errorMessage = 'Seleccione un documento.';
+      //   return;
+      // }
 
       // Crear doc y mostrar popup
       if (this.currentStep === 2) {
@@ -443,25 +452,48 @@ export default {
 
     },
     async createMission() {
-      const headers = {
-        'Content-Type': 'application/json',
-        'x-api-key': getCookie('token')
-      };
+      // const headers = {
+      //   'Content-Type': 'application/json',
+      //   'x-api-key': getCookie('token')
+      // };
 
-      // TODO: arreglar el client name
-      const body = {
-        datos_firmantes: this.signersData,
-        id_custom_client: this.documentId ?? null,
-        document: this.base64Doc,
-        webhook_url: 'https://firmasxw.com/test/webhook',
-        cliente: 'luis'
-      };
+      // // TODO: arreglar el client name
+      // const body = {
+      //   datos_firmantes: this.signersData,
+      //   id_custom_client: this.documentId ?? null,
+      //   document: this.base64Doc,
+      //   webhook_url: 'https://firmasxw.com/test/webhook',
+      //   cliente: 'luis'
+      // };
 
       try {
-        const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
-        this.todasLasSolicitudes = response.data;
+        // const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
+        // this.todasLasSolicitudes = response.data;
+        this.todasLasSolicitudes = {
+          "id_seguimiento": "81c5eb5137e72a7f33",
+          "created_at": 1718659596,
+          "urls": [
+            {
+              "link": "https://firmasxw.com/?tkn=7e084eea76a510f757ee",
+              "name": "name",
+              "dni": "43795269",
+              "contact": "5493586005012",
+              "method": "api",
+              "id_custom": "7e084eea76a510f757ee"
+            },
+            {
+              "link": "https://firmasxw.com/?tkn=05a34ac0aaf78bbe09a3",
+              "name": "name2",
+              "dni": "43795269",
+              "contact": "luis@hotmail.com",
+              "method": "mail",
+              "id_custom": "05a34ac0aaf78bbe09a3"
+            }
+          ]
+        };
         console.log('Todas las solicitudes RESPONSE: ', this.todasLasSolicitudes);
-        return response.data; // Return the response data
+        // return response.data; // Return the response data
+        return this.todasLasSolicitudes;
       } catch (error) {
         if (error.response && error.response.status === 429) {
           // Si la solicitud falla debido a "Demasiadas solicitudes", muestra la modal
@@ -571,5 +603,6 @@ export default {
       }, 2000);
     },
   }
+
 }
 </script>
