@@ -264,7 +264,8 @@
               <div class="flex items-center ml-16">
                 <i v-if="signer.method === 'mail'" class="fas fa-envelope text-xl mr-2 text-gray-500"></i>
                 <i v-else-if="signer.method === 'wpp'" class="fab fa-whatsapp text-xl mr-2 text-gray-500"></i>
-                <input type="checkbox" class="mr-2 ml-0.5 cursor-pointer h-4 w-4">
+                <input type="checkbox" v-model="signer.sendWithFirmIA" class="mr-2 ml-0.5 cursor-pointer h-4 w-4"
+                  @change="handleCheckboxChange(signer)">
                 <p>Enviar con FirmIA</p>
                 <i @mouseover="showInfoMessage = true" @mouseleave="showInfoMessage = false"
                   class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
@@ -283,7 +284,8 @@
               <i class="fas fa-pen mr-2"></i>Actualizar datos
             </button>
             <router-link to="/requests?enviado=true">
-              <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
+              <button @click="sendDocuments"
+                class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 font-bold rounded-full">
                 <i class="fas fa-file mr-2"></i>Enviar documento
               </button>
             </router-link>
@@ -334,7 +336,8 @@ export default {
       base64Doc: '',
       showPopUp: false,
       showLimitExceededModal: false,
-      PopUpMessage: 'Por favor corrobore los datos'
+      PopUpMessage: 'Por favor corrobore los datos',
+      sendWithFirmIABodys: [],
     };
   },
   methods: {
@@ -361,7 +364,6 @@ export default {
       }
     },
     async nextStep() {
-      console.log('currentStep:', this.currentStep);
       // Verificar si todos los campos del firmante están completos o el checkbox tildado
       if (this.currentStep === 1 && !this.documentSigned && this.signers.some(signer => {
         if (signer.contact === 'wpp') {
@@ -423,6 +425,50 @@ export default {
         this.currentStep++;
       }
     },
+    handleCheckboxChange(signer) {
+      // Verificar si el checkbox está tildado
+      if (signer.sendWithFirmIA) {
+        if (this.documentId === '') {
+          this.documentId = 'Documento';
+        }
+        const body = {
+          "phone": signer.contact,
+          "flow_id": 69,
+          "variables": {
+            "company": getCookie('token'),
+            "name": signer.name,
+            "sign_link": signer.link,
+            "document_name": this.documentId ?? 'Documento',
+            "document_link": `https://arg-files.s3.amazonaws.com/${this.todasLasSolicitudes.id_seguimiento}.pdf`,
+            "id_custom": signer.id_custom
+          }
+        }
+        this.sendWithFirmIABodys.push(body);
+        console.log('sendWithFirmIABodys:', this.sendWithFirmIABodys);
+      } else {
+        for (let i = 0; i < this.sendWithFirmIABodys.length; i++) {
+          if (this.sendWithFirmIABodys[i].phone === signer.contact) {
+            this.sendWithFirmIABodys.splice(i, 1);
+          }
+        }
+      }
+    },
+    async sendDocuments() {
+      for (let body of this.sendWithFirmIABodys) {
+        let data = JSON.stringify(body);
+        let config = {
+          method: 'post',
+          maxBodyLength: Infinity,
+          url: 'https://firmasxw.com/wpp/sendFlow',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data: data
+        };
+
+        await axios.request(config);
+      }
+    },
     async updateMission() {
       const headers = {
         'Content-Type': 'application/json',
@@ -470,9 +516,12 @@ export default {
       try {
         const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
         this.todasLasSolicitudes = response.data;
+        
+        for (let element of this.todasLasSolicitudes.urls) {
+          element.sendWithFirmIA = false;
+        }
 
-        return response.data; // Return the response data
-
+        return this.todasLasSolicitudes;
       } catch (error) {
         if (error.response && error.response.status === 429) {
           // Si la solicitud falla debido a "Demasiadas solicitudes", muestra la modal
