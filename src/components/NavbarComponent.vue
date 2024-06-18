@@ -7,7 +7,7 @@
     :class="{ '-translate-x-full': !sidebarOpen }" style="height: calc(100vh);">
     <div class="flex flex-col h-full px-2">
       <a href="">
-        <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="mx-auto w-32 mt-4 mb-12">
+        <img src="../assets/img/fxwbanner.png" alt="Logo de fxw" class="mx-auto mt-1 mb-10" style="width: 85%;">
       </a>
       <div class="flex flex-col px-2 text-gray-100">
         <span class="flex flex-col items-center font-semibold rounded-2xl bg-blue-400 mb-2">
