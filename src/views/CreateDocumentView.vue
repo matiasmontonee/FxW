@@ -250,25 +250,27 @@
                   </label>
                 </div>
                 <i @mouseover="showInfoMessage = 'photoId'" @mouseleave="showInfoMessage = false"
-                  class="fas fa-info-circle text-xl mt-1 hover:text-gray-400 cursor-pointer"></i>
+                  class="fas fa-info-circle text-xl mt-1 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
                 <div v-if="showInfoMessage === 'photoId'"
-                  class="absolute bg-gray-200 rounded-lg text-sm py-2 px-6 w-1/5 top-1/5 right-0 mr-96 text-gray-700 shadow-lg z-10">
-                  <p>Requiere que el firmante proporcione una foto de su DNI o CI junto con una selfie para
-                    verificación.
+                  class="absolute bg-gray-200 rounded-lg text-sm py-1 px-6 w-1/5 top-1/5 text-gray-700 shadow-lg z-10 mr-4 mt-32">
+                  <p>El firmante deberá tomar una foto del documento de identidad por ambos lados + foto selfie para
+                    firmar (FxW no valida las fotos).
+                    Las fotos quedarán en el informe de firmas. Solo se puede solicitar esta información con nuestro
+                    asistente FirmIA.
                   </p>
                 </div>
               </div>
 
-              <div class="flex ml-16 items-center">
+              <div class="flex items-center ml-16">
                 <i v-if="signer.method === 'mail'" class="fas fa-envelope text-xl mr-2 text-gray-500"></i>
-                <i v-else-if="signer.method === 'wpp'" class="fas fa-phone-alt text-xl mr-2 text-gray-500"></i>
+                <i v-else-if="signer.method === 'wpp'" class="fab fa-whatsapp text-xl mr-2 text-gray-500"></i>
                 <input type="checkbox" class="mr-2 ml-0.5 cursor-pointer h-4 w-4">
                 <p>Enviar con FirmIA</p>
                 <i @mouseover="showInfoMessage = true" @mouseleave="showInfoMessage = false"
                   class="fas fa-info-circle text-xl ml-2 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
-                <div v-if="showInfoMessage"
-                  class="absolute bg-gray-200 rounded-lg text-sm py-4 px-6 w-1/5 top-1/5 right-0 text-gray-700 shadow-lg z-10 mr-4 mt-32">
-                  <p>Envía el mensaje automáticamente mediante el contacto seleccionado.</p>
+                <div v-if="showInfoMessage === true"
+                  class="absolute bg-gray-200 rounded-lg text-sm py-1 px-6 w-1/5 top-1/5 text-gray-700 shadow-lg z-10 mr-4 mt-32">
+                  <p>Envía el documento automáticamente mediante nuestro asistente de WhatsApp FirmIA</p>
                 </div>
               </div>
             </div>
@@ -313,7 +315,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 2,
+      currentStep: 1,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -397,12 +399,11 @@ export default {
         }
       }
 
-      //TODO: uncomment
       // Verificar si no se ha seleccionado ningún documento
-      // if (this.currentStep === 2 && this.fileNames.length === 0) {
-      //   this.errorMessage = 'Seleccione un documento.';
-      //   return;
-      // }
+      if (this.currentStep === 2 && this.fileNames.length === 0) {
+        this.errorMessage = 'Seleccione un documento.';
+        return;
+      }
 
       // Crear doc y mostrar popup
       if (this.currentStep === 2) {
@@ -452,48 +453,26 @@ export default {
 
     },
     async createMission() {
-      // const headers = {
-      //   'Content-Type': 'application/json',
-      //   'x-api-key': getCookie('token')
-      // };
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': getCookie('token')
+      };
 
-      // // TODO: arreglar el client name
-      // const body = {
-      //   datos_firmantes: this.signersData,
-      //   id_custom_client: this.documentId ?? null,
-      //   document: this.base64Doc,
-      //   webhook_url: 'https://firmasxw.com/test/webhook',
-      //   cliente: 'luis'
-      // };
+      // TODO: arreglar el client name
+      const body = {
+        datos_firmantes: this.signersData,
+        id_custom_client: this.documentId ?? null,
+        document: this.base64Doc,
+        webhook_url: 'https://firmasxw.com/test/webhook',
+        cliente: 'luis'
+      };
 
       try {
-        // const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
-        // this.todasLasSolicitudes = response.data;
-        this.todasLasSolicitudes = {
-          "id_seguimiento": "81c5eb5137e72a7f33",
-          "created_at": 1718659596,
-          "urls": [
-            {
-              "link": "https://firmasxw.com/?tkn=7e084eea76a510f757ee",
-              "name": "name",
-              "dni": "43795269",
-              "contact": "5493586005012",
-              "method": "api",
-              "id_custom": "7e084eea76a510f757ee"
-            },
-            {
-              "link": "https://firmasxw.com/?tkn=05a34ac0aaf78bbe09a3",
-              "name": "name2",
-              "dni": "43795269",
-              "contact": "luis@hotmail.com",
-              "method": "mail",
-              "id_custom": "05a34ac0aaf78bbe09a3"
-            }
-          ]
-        };
-        console.log('Todas las solicitudes RESPONSE: ', this.todasLasSolicitudes);
-        // return response.data; // Return the response data
-        return this.todasLasSolicitudes;
+        const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
+        this.todasLasSolicitudes = response.data;
+
+        return response.data; // Return the response data
+
       } catch (error) {
         if (error.response && error.response.status === 429) {
           // Si la solicitud falla debido a "Demasiadas solicitudes", muestra la modal
