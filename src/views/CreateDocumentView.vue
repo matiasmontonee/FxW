@@ -242,11 +242,13 @@
               <div class="flex items-center">
                 <div class="relative mr-4">
                   <label class="inline-flex items-center mt-1 cursor-pointer">
-                    <input type="checkbox" class="hidden" v-model="photoIdChecked" />
-                    <div class="w-10 h-3 bg-gray-300 rounded-full mt-1"
-                      :style="{ backgroundColor: photoIdChecked ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
-                    <div class="absolute w-5 h-5 bg-white border rounded-full transition-transform transform mt-1"
-                      :class="{ 'translate-x-full': photoIdChecked }"></div>
+                    <input type="checkbox" class="hidden" v-model="signer.sendWithDNI"
+                      @change="handleDNIChange(signer)" />
+                    <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
+                      :class="{ 'bg-green-400': signer.sendWithDNI }">
+                      <div class="bg-white w-8 h-8 rounded-full shadow-md transform duration-300 ease-in-out"
+                        :class="{ 'translate-x-6': signer.sendWithDNI }"></div>
+                    </div>
                   </label>
                 </div>
                 <i @mouseover="showInfoMessage = 'photoId'" @mouseleave="showInfoMessage = false"
@@ -317,7 +319,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 1,
+      currentStep: 2,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -401,11 +403,11 @@ export default {
         }
       }
 
-      // Verificar si no se ha seleccionado ningún documento
-      if (this.currentStep === 2 && this.fileNames.length === 0) {
-        this.errorMessage = 'Seleccione un documento.';
-        return;
-      }
+      // // Verificar si no se ha seleccionado ningún documento
+      // if (this.currentStep === 2 && this.fileNames.length === 0) {
+      //   this.errorMessage = 'Seleccione un documento.';
+      //   return;
+      // }
 
       // Crear doc y mostrar popup
       if (this.currentStep === 2) {
@@ -423,6 +425,34 @@ export default {
         }
         this.errorMessage = '';
         this.currentStep++;
+      }
+    },
+    handleDNIChange(signer) {
+      console.log('signer:', signer.sendWithDNI);
+      if (signer.sendWithDNI) {
+        if (this.documentId === '') {
+          this.documentId = 'Documento';
+        }
+        const body = {
+          "phone": signer.contact,
+          "flow_id": 69,
+          "variables": {
+            "company": getCookie('token'),
+            "name": signer.name,
+            "sign_link": signer.link,
+            "document_name": this.documentId ?? 'Documento',
+            "document_link": `https://arg-files.s3.amazonaws.com/${this.todasLasSolicitudes.id_seguimiento}.pdf`,
+            "id_custom": signer.id_custom,
+            "sendWithDNI": true
+          }
+        }
+        this.sendWithFirmIABodys.push(body);
+      } else {
+        for (let i = 0; i < this.sendWithFirmIABodys.length; i++) {
+          if (this.sendWithFirmIABodys[i].phone === signer.contact) {
+            this.sendWithFirmIABodys.splice(i, 1);
+          }
+        }
       }
     },
     handleCheckboxChange(signer) {
@@ -499,28 +529,55 @@ export default {
 
     },
     async createMission() {
-      const headers = {
-        'Content-Type': 'application/json',
-        'x-api-key': getCookie('token')
-      };
+      // const headers = {
+      //   'Content-Type': 'application/json',
+      //   'x-api-key': getCookie('token')
+      // };
 
-      // TODO: arreglar el client name
-      const body = {
-        datos_firmantes: this.signersData,
-        id_custom_client: this.documentId ?? null,
-        document: this.base64Doc,
-        webhook_url: 'https://firmasxw.com/test/webhook',
-        cliente: 'luis'
-      };
+      // // TODO: arreglar el client name
+      // const body = {
+      //   datos_firmantes: this.signersData,
+      //   id_custom_client: this.documentId ?? null,
+      //   document: this.base64Doc,
+      //   webhook_url: 'https://firmasxw.com/test/webhook',
+      //   cliente: 'luis',
+      //   automaticPoition: this.automaticPositionChecked,
+      // };
 
       try {
-        const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
-        this.todasLasSolicitudes = response.data;
-        
+        // const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
+        // this.todasLasSolicitudes = response.data;
+
+        // for (let element of this.todasLasSolicitudes.urls) {
+        //   element.sendWithFirmIA = false;
+        // }
+
+        this.todasLasSolicitudes = {
+          "id_seguimiento": "b3cf2db0c9ce729e4d",
+          "created_at": 1718730225,
+          "urls": [
+            {
+              "link": "https://firmasxw.com/?tkn=18110d1158b725205131",
+              "name": "Luis Lacoste",
+              "dni": "43795269",
+              "contact": "5493586005012",
+              "method": "wpp",
+              "id_custom": "18110d1158b725205131"
+            },
+            {
+              "link": "https://firmasxw.com/?tkn=65f0132c2c4ff97bf6d9",
+              "name": "name2",
+              "dni": "43795269",
+              "contact": "luis@hotmail.com",
+              "method": "mail",
+              "id_custom": "65f0132c2c4ff97bf6d9"
+            }
+          ]
+        };
         for (let element of this.todasLasSolicitudes.urls) {
           element.sendWithFirmIA = false;
+          element.sendWithDNI = false;
         }
-
         return this.todasLasSolicitudes;
       } catch (error) {
         if (error.response && error.response.status === 429) {
