@@ -319,7 +319,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 2,
+      currentStep: 1,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -404,10 +404,10 @@ export default {
       }
 
       // // Verificar si no se ha seleccionado ningún documento
-      // if (this.currentStep === 2 && this.fileNames.length === 0) {
-      //   this.errorMessage = 'Seleccione un documento.';
-      //   return;
-      // }
+      if (this.currentStep === 2 && this.fileNames.length === 0) {
+        this.errorMessage = 'Seleccione un documento.';
+        return;
+      }
 
       // Crear doc y mostrar popup
       if (this.currentStep === 2) {
@@ -529,51 +529,47 @@ export default {
 
     },
     async createMission() {
-      // const headers = {
-      //   'Content-Type': 'application/json',
-      //   'x-api-key': getCookie('token')
-      // };
+      const headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': getCookie('token')
+      };
 
-      // // TODO: arreglar el client name
-      // const body = {
-      //   datos_firmantes: this.signersData,
-      //   id_custom_client: this.documentId ?? null,
-      //   document: this.base64Doc,
-      //   webhook_url: 'https://firmasxw.com/test/webhook',
-      //   cliente: 'luis',
-      //   automaticPoition: this.automaticPositionChecked,
-      // };
+      // TODO: arreglar el client name
+      const body = {
+        datos_firmantes: this.signersData,
+        id_custom_client: this.documentId ?? null,
+        document: this.base64Doc,
+        webhook_url: 'https://firmasxw.com/test/webhook',
+        cliente: 'luis',
+        automaticPoition: this.automaticPositionChecked,
+      };
 
       try {
-        // const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
-        // this.todasLasSolicitudes = response.data;
+        const response = await axios.post('https://firmasxw.com/test/signatureRequest', body, { headers });
+        this.todasLasSolicitudes = response.data;
 
-        // for (let element of this.todasLasSolicitudes.urls) {
-        //   element.sendWithFirmIA = false;
-        // }
-
-        this.todasLasSolicitudes = {
-          "id_seguimiento": "b3cf2db0c9ce729e4d",
-          "created_at": 1718730225,
-          "urls": [
-            {
-              "link": "https://firmasxw.com/?tkn=18110d1158b725205131",
-              "name": "Luis Lacoste",
-              "dni": "43795269",
-              "contact": "5493586005012",
-              "method": "wpp",
-              "id_custom": "18110d1158b725205131"
-            },
-            {
-              "link": "https://firmasxw.com/?tkn=65f0132c2c4ff97bf6d9",
-              "name": "name2",
-              "dni": "43795269",
-              "contact": "luis@hotmail.com",
-              "method": "mail",
-              "id_custom": "65f0132c2c4ff97bf6d9"
-            }
-          ]
-        };
+        // this.todasLasSolicitudes = {
+        //   "id_seguimiento": "b3cf2db0c9ce729e4d",
+        //   "created_at": 1718730225,
+        //   "urls": [
+        //     {
+        //       "link": "https://firmasxw.com/?tkn=18110d1158b725205131",
+        //       "name": "Luis Lacoste",
+        //       "dni": "43795269",
+        //       "contact": "5493586005012",
+        //       "method": "wpp",
+        //       "id_custom": "18110d1158b725205131"
+        //     },
+        //     {
+        //       "link": "https://firmasxw.com/?tkn=65f0132c2c4ff97bf6d9",
+        //       "name": "name2",
+        //       "dni": "43795269",
+        //       "contact": "luis@hotmail.com",
+        //       "method": "mail",
+        //       "id_custom": "65f0132c2c4ff97bf6d9"
+        //     }
+        //   ]
+        // };
         for (let element of this.todasLasSolicitudes.urls) {
           element.sendWithFirmIA = false;
           element.sendWithDNI = false;
