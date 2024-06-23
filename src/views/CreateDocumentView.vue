@@ -237,22 +237,20 @@
             </div>
 
 
-            <div class="flex items-center justify-start mt-4 mb-8">
+            <div class="flex items-center justify-start">
               <span>Pedir foto de DNI/CI + foto Selfie</span>
               <div class="flex items-center">
-                <div class="relative mr-4">
-                  <label class="inline-flex items-center mt-1 cursor-pointer">
-                    <input type="checkbox" class="hidden" v-model="signer.sendWithDNI"
-                      @change="handleDNIChange(signer)" />
-                    <div class="w-16 h-10 flex items-center bg-gray-300 rounded-full p-1 duration-300 ease-in-out"
-                      :class="{ 'bg-green-400': signer.sendWithDNI }">
-                      <div class="bg-white w-8 h-8 rounded-full shadow-md transform duration-300 ease-in-out"
-                        :class="{ 'translate-x-6': signer.sendWithDNI }"></div>
-                    </div>
+                <div class="relative ml-3">
+                  <label class="inline-flex items-center cursor-pointer">
+                    <input type="checkbox" class="hidden" v-model="sendDNI[index]" @change="handleDNIChange(index, signer)"/>
+                    <div class="w-10 h-3 bg-gray-300 rounded-full"
+                      :style="{ backgroundColor: sendDNI[index] ? 'rgba(59, 130, 246)' : '#D1D5DB' }"></div>
+                    <div class=" absolute w-5 h-5 bg-white border rounded-full transition-transform transform"
+                      :class="{ 'translate-x-full': sendDNI[index] }"></div>
                   </label>
                 </div>
                 <i @mouseover="showInfoMessage = 'photoId'" @mouseleave="showInfoMessage = false"
-                  class="fas fa-info-circle text-xl mt-1 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
+                  class="fas fa-info-circle text-xl ml-3 text-gray-500 hover:text-gray-400 cursor-pointer"></i>
                 <div v-if="showInfoMessage === 'photoId'"
                   class="absolute bg-gray-200 rounded-lg text-sm py-1 px-6 w-1/5 top-1/5 text-gray-700 shadow-lg z-10 mr-4 mt-32">
                   <p>El firmante deberá tomar una foto del documento de identidad por ambos lados + foto selfie para
@@ -319,7 +317,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 1,
+      currentStep: 2,
       loading: false,
       fileNames: [],
       errorMessage: '',
@@ -340,6 +338,7 @@ export default {
       showLimitExceededModal: false,
       PopUpMessage: 'Por favor corrobore los datos',
       sendWithFirmIABodys: [],
+      sendDNI: [false, false, false, false, false, false],
     };
   },
   methods: {
@@ -403,7 +402,7 @@ export default {
         }
       }
 
-      // // Verificar si no se ha seleccionado ningún documento
+      // Verificar si no se ha seleccionado ningún documento
       if (this.currentStep === 2 && this.fileNames.length === 0) {
         this.errorMessage = 'Seleccione un documento.';
         return;
@@ -427,11 +426,18 @@ export default {
         this.currentStep++;
       }
     },
-    handleDNIChange(signer) {
-      console.log('signer:', signer.sendWithDNI);
-      if (signer.sendWithDNI) {
+    // TODO: tendria que hacer que todos los checbox usen el mismo metodo de index... por alguna razon funciona mejor
+    handleDNIChange(index, signer) {
+      console.log('sendWithFirmIABodys:', this.sendWithFirmIABodys);
+      if (this.sendDNI[index]) {
+        signer.sendWithFirmIA = true;
         if (this.documentId === '') {
           this.documentId = 'Documento';
+        }
+        for (let i = 0; i < this.sendWithFirmIABodys.length; i++) {
+          if (this.sendWithFirmIABodys[i].phone === signer.contact) {
+            this.sendWithFirmIABodys.splice(i, 1);
+          }
         }
         const body = {
           "phone": signer.contact,
@@ -448,9 +454,9 @@ export default {
         }
         this.sendWithFirmIABodys.push(body);
       } else {
-        for (let i = 0; i < this.sendWithFirmIABodys.length; i++) {
-          if (this.sendWithFirmIABodys[i].phone === signer.contact) {
-            this.sendWithFirmIABodys.splice(i, 1);
+        for (const element of this.sendWithFirmIABodys) {
+          if (element.phone === signer.contact) {
+            element.variables.sendWithDNI = false;
           }
         }
       }
@@ -470,7 +476,8 @@ export default {
             "sign_link": signer.link,
             "document_name": this.documentId ?? 'Documento',
             "document_link": `https://arg-files.s3.amazonaws.com/${this.todasLasSolicitudes.id_seguimiento}.pdf`,
-            "id_custom": signer.id_custom
+            "id_custom": signer.id_custom,
+            "sendWithDNI": false
           }
         }
         this.sendWithFirmIABodys.push(body);
