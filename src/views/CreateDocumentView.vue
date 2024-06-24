@@ -317,7 +317,7 @@ export default {
   },
   data() {
     return {
-      currentStep: 2,
+      currentStep: 1,
       loading: false,
       fileNames: [],
       errorMessage: '',
