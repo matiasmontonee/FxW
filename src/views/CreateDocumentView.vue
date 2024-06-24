@@ -449,14 +449,14 @@ export default {
             "document_name": this.documentId ?? 'Documento',
             "document_link": `https://arg-files.s3.amazonaws.com/${this.todasLasSolicitudes.id_seguimiento}.pdf`,
             "id_custom": signer.id_custom,
-            "sendWithDNI": true
+            "send_dni": true
           }
         }
         this.sendWithFirmIABodys.push(body);
       } else {
         for (const element of this.sendWithFirmIABodys) {
           if (element.phone === signer.contact) {
-            element.variables.sendWithDNI = false;
+            element.variables.send_dni = false;
           }
         }
       }
@@ -477,7 +477,7 @@ export default {
             "document_name": this.documentId ?? 'Documento',
             "document_link": `https://arg-files.s3.amazonaws.com/${this.todasLasSolicitudes.id_seguimiento}.pdf`,
             "id_custom": signer.id_custom,
-            "sendWithDNI": false
+            "send_dni": false
           }
         }
         this.sendWithFirmIABodys.push(body);
@@ -548,7 +548,7 @@ export default {
         document: this.base64Doc,
         webhook_url: 'https://firmasxw.com/test/webhook',
         cliente: 'luis',
-        automaticPoition: this.automaticPositionChecked,
+        fixed_signature: this.automaticPositionChecked,
       };
 
       try {
@@ -579,7 +579,7 @@ export default {
         // };
         for (let element of this.todasLasSolicitudes.urls) {
           element.sendWithFirmIA = false;
-          element.sendWithDNI = false;
+          element.send_dni = false;
         }
         return this.todasLasSolicitudes;
       } catch (error) {
